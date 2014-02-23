@@ -1,5 +1,8 @@
-
-
+#-----------------------------------------
+#Class: ccsmTimes
+#       *Object is created from timing file
+#       *
+#-----------------------------------------
 import logging
 from collections import OrderedDict
 import gzip
