@@ -3,7 +3,7 @@
 import sys
 sys.path.append('../modules')
 try:
-  import cesmTimer as ct
+  import cesmperftiming as cpt
 except:
   print "could not files cesmTimer module"
 
@@ -13,8 +13,8 @@ def main():
   file15 = "ccsm_timing_stats-stampede-15x2x8.13.gz"
   file16 = "ccsm_timing_stats-stampede-16x2x8.13.gz"
 
-  fifteenRanks = ct.cesmTimeParser()
-  sixteenRanks = ct.cesmTimeParser()
+  fifteenRanks = cpt.cesmTimeParser()
+  sixteenRanks = cpt.cesmTimeParser()
   fifteenRanks.parseFile(file15)
   sixteenRanks.parseFile(file16)
 
