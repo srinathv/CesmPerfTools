@@ -1,5 +1,8 @@
 # rects =  plt.bar(pos, cam3RatioArray, width, color='g')
 
+
+import matplotlib.pyplot as plt
+
 def autolabelRel(rects):
     # attach some text labels
     for rect in rects:
