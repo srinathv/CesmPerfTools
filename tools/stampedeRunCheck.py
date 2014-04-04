@@ -30,7 +30,6 @@ xmlchangeMaxTaskPerNode=' ./xmlchange -file env_mach_pes.xml -id MAX_TASKS_PER_N
 #
 
 caseName = '' #initialize
-#loop over devices will go here
 for arch in ['host','mic']:
   device = arch
   if (device == 'host') :
