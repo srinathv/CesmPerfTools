@@ -14,7 +14,7 @@ cesmVersion='c13b7'
 compsetList = ['FIDEAL','FC5']
 nNodesList = [8]
 nthreads = [1 , 2]
-resolution=['ne16_n16']
+resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
 
@@ -55,7 +55,7 @@ for arch in ['host','mic']:
           caseName = caseName + '.' + str(nRankPerNode) + 'mpi'
           caseName = caseName + '.' + str(nThreadsPerRank) + 'omp'
           print caseName
-          cdCommand = 'cd ' + caseName 
+          cdCommand = 'cd ' + caseName + ' '
           createNewCase = './create_newcase -case ' + caseName + ' -res ' + resolution[0] \
                           +  ' -compset ' + compset + ' -mach ' + machine \
                           +  ' -compiler ' + compiler + ' -mpi ' + mpi
