@@ -108,7 +108,7 @@ for arch in ['host','mic']:
             #subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
           except ValueError:
-            print "failed at entering  " + casename + " directory or doing ./cesm_setup "
+            print "failed at entering  " + caseName + " directory or doing ./cesm_setup "
             pass
           
           commandLine = cdCommand + ' && ' + caseName + '.clean_build'
@@ -116,15 +116,15 @@ for arch in ['host','mic']:
             #subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
           except ValueError:
-            print "failed at entering  " + casename + " directory or doing clean_build "
+            print "failed at entering  " + caseName + " directory or doing clean_build "
             pass
 
           commandLine = cdCommand + ' && ' + caseName + '.build'
           try:
             subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-            print commandLine
-          except ValueError:
-            print "failed at entering " + casename + "directory or doing build "
+            #print commandLine
+          except:
+            print "failed at entering " + caseName + "directory or doing build "
             pass
 
           caseName = '' # clear the name
