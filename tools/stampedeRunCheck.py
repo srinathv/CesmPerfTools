@@ -126,7 +126,14 @@ for arch in ['host','mic']:
           except:
             print "failed at entering " + caseName + "directory or doing build "
             pass
-
+          commandLine = cdCommand + ' && ' + caseName + '.submit'
+          if device == 'host':
+            try:
+              subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+              print commandLine
+            except:
+              print "failed at entering " + caseName + "directory or doing submitting "
+              pass            
           caseName = '' # clear the name
 
 
