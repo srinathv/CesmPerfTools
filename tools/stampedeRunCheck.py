@@ -60,7 +60,7 @@ for arch in ['host','mic']:
                           +  ' -compset ' + compset + ' -mach ' + machine \
                           +  ' -compiler ' + compiler + ' -mpi ' + mpi
           try: 
-            #subprocess.check_call(createNewCase, stderr=subprocess.STDOUT, shell=True)
+            subprocess.check_call(createNewCase, stderr=subprocess.STDOUT, shell=True)
             print createNewCase
           except ValueError:
             print "the " + caseName + " already exists, failed trying to create new case"
