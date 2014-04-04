@@ -98,37 +98,36 @@ for arch in ['host','mic']:
             commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '244'
           commandLine = cdCommand + commandLine 
           try:
-            #subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
-          except ValueError:
+          except :
             print "failed at entering the new case directory or doing xmlchange of pes"
 
           commandLine = cdCommand + ' && ./cesm_setup'
           try:
-            #subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
-          except ValueError:
+          except :
             print "failed at entering  " + caseName + " directory or doing ./cesm_setup "
             pass
           
           commandLine = cdCommand + ' && ' + caseName + '.clean_build'
           try:
-            #subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
-          except ValueError:
+          except :
             print "failed at entering  " + caseName + " directory or doing clean_build "
             pass
 
           commandLine = cdCommand + ' && ' + caseName + '.build'
           try:
             subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-            #print commandLine
+            print commandLine
           except:
             print "failed at entering " + caseName + "directory or doing build "
             pass
 
           caseName = '' # clear the name
-
 
 
 
