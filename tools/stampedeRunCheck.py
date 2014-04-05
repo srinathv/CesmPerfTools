@@ -17,7 +17,8 @@ nthreads = [1 , 2]
 resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
-arches=['host','mic']
+#arches=['host','mic']
+arches=['host']
 quad=False
 
 
