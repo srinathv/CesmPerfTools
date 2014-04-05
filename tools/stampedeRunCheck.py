@@ -18,6 +18,7 @@ resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
 arches=['host','mic']
+quad=False
 
 
 
@@ -123,6 +124,14 @@ for arch in arches:
             print "failed at entering  " + caseName + " directory or doing clean_build "
             pass
 
+          if (device == 'mic') and (quad):
+            commandLine = "cp quadrature_mod.F90 " + caseName + "/SourceMods/src.cam ."
+            try:
+              print commandLine
+              subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+            except :
+              print "failed at copying quadrature_mod.F90 into  " + caseName
+              pass
           commandLine = cdCommand + ' && ' + caseName + '.build'
           try:
             print commandLine
