@@ -17,6 +17,8 @@ nthreads = [1 , 2]
 resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
+arches=['host','mic']
+
 
 
 xmlchangePesBase='./xmlchange -file env_mach_pes.xml -id '
@@ -29,8 +31,10 @@ xmlchangeMaxTaskPerNode=' ./xmlchange -file env_mach_pes.xml -id MAX_TASKS_PER_N
 # j
 #
 
+print 'Exectuting build and run system'
+
 caseName = '' #initialize
-for arch in ['host','mic']:
+for arch in arches:
   device = arch
   if (device == 'host') :
     deviceDict = hostDict
@@ -54,23 +58,23 @@ for arch in ['host','mic']:
           caseName = caseName + '.' + compiler
           caseName = caseName + '.' + str(nRankPerNode) + 'mpi'
           caseName = caseName + '.' + str(nThreadsPerRank) + 'omp'
-          print caseName
           cdCommand = 'cd ' + caseName + ' '
           createNewCase = './create_newcase -case ' + caseName + ' -res ' + resolution[0] \
                           +  ' -compset ' + compset + ' -mach ' + machine \
                           +  ' -compiler ' + compiler + ' -mpi ' + mpi
           try: 
-            subprocess.check_call(createNewCase, stderr=subprocess.STDOUT, shell=True)
             print createNewCase
-          except ValueError:
+            subprocess.check_call(createNewCase, stderr=subprocess.STDOUT, shell=True)
+          except :
             print "the " + caseName + " already exists, failed trying to create new case"
-
+            pass
           commandLine = cdCommand + ' && ./cesm_setup -clean'
           try:
-            #subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
-          except ValueError:
+            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+          except :
             print "failed at entering the new case directory or doing ./cesm_setup -clean"
+            pass
           
           xmlchangeLines=[]
           xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 5')
@@ -96,41 +100,41 @@ for arch in ['host','mic']:
             commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '16'
           if device == 'mic':
             commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '244'
-          commandLine = cdCommand + commandLine 
+          commandLine = cdCommand + '&&' + commandLine 
           try:
+            print '*** HERE is the xml line = ' + commandLine
             subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-            print commandLine
           except :
             print "failed at entering the new case directory or doing xmlchange of pes"
-
+            pass
           commandLine = cdCommand + ' && ./cesm_setup'
           try:
+            print '*** here is the cesm_setup command = ' + commandLine
             subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-            print commandLine
           except :
             print "failed at entering  " + caseName + " directory or doing ./cesm_setup "
             pass
           
           commandLine = cdCommand + ' && ' + caseName + '.clean_build'
           try:
-            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
+            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
           except :
             print "failed at entering  " + caseName + " directory or doing clean_build "
             pass
 
           commandLine = cdCommand + ' && ' + caseName + '.build'
           try:
-            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             print commandLine
+            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
           except:
             print "failed at entering " + caseName + "directory or doing build "
             pass
           commandLine = cdCommand + ' && ' + caseName + '.submit'
           if device == 'host':
             try:
-              subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
               print commandLine
+              subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             except:
               print "failed at entering " + caseName + "directory or doing submitting "
               pass            
