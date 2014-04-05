@@ -6,7 +6,8 @@
 ## if a step fails, keep going to next combo"
 
 import subprocess
-import sys
+import os,sys,getopt
+
 
 hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
 micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[192,96]}
@@ -33,125 +34,147 @@ xmlchangeMaxTaskPerNode=' ./xmlchange -file env_mach_pes.xml -id MAX_TASKS_PER_N
 # j
 #
 
-print 'Exectuting build and run system'
+def shellCommand(command,errorMessage):
+  try: 
+    print command
+    subprocess.check_call(command, stderr=subprocess.STDOUT, shell=True)
+  except :
+    print errorMessage
+    pass
 
-caseName = '' #initialize
-for arch in arches:
-  device = arch
-  if (device == 'host') :
-    deviceDict = hostDict
-  elif (device == 'mic') :
-    deviceDict = micDict
-  for nNodes in nNodesList: 
-    for i in range(0,len(compsetList)): 
-      compset = compsetList[i]
-      for j in range(0,len(deviceDict['compilers'])):
-        compiler = deviceDict['compilers'][j]
-        for indx, rankCount in enumerate(deviceDict['mpiRanksPerNode']):
-          #loose logic on position of mpiranks and nthreads
-          nRankPerNode = rankCount
-          nThreadsPerRank = nthreads[indx] 
-          totalNtasks = nNodes * nRankPerNode
-          #build case name
-          caseName = cesmVersion + '.' + resolution[0]
-          caseName = caseName + '.' + str(nNodes) + 'nodes'
-          caseName = caseName + '.' + device
-          caseName = caseName + '.' + compset
-          caseName = caseName + '.' + compiler
-          caseName = caseName + '.' + str(nRankPerNode) + 'mpi'
-          caseName = caseName + '.' + str(nThreadsPerRank) + 'omp'
-          cdCommand = 'cd ' + caseName + ' '
-          createNewCase = './create_newcase -case ' + caseName + ' -res ' + resolution[0] \
-                          +  ' -compset ' + compset + ' -mach ' + machine \
-                          +  ' -compiler ' + compiler + ' -mpi ' + mpi
-          try: 
-            print createNewCase
-            subprocess.check_call(createNewCase, stderr=subprocess.STDOUT, shell=True)
-          except :
-            print "the " + caseName + " already exists, failed trying to create new case"
-            pass
-          commandLine = cdCommand + ' && ./cesm_setup -clean'
-          try:
-            print commandLine
-            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-          except :
-            print "failed at entering the new case directory or doing ./cesm_setup -clean"
-            pass
-          
-          xmlchangeLines=[]
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 5')
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_OPTION -val ndays')
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id REST_OPTION -val never')
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id TIMER_LEVEL -val 9')
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id DOUT_S -val FALSE')
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id COMP_RUN_BARRIERS -val TRUE')
-          for component in xmlchangeComponents:
-            for var in xmlchangeVar:
-              if var == 'NTASKS_':
-                value = totalNtasks
-              elif var == 'NTHRDS_':
-                value = nThreadsPerRank
-              elif var == 'ROOTPE_':  
-                value = 0             
-              xmlchangeLines.append(xmlchangePesBase + var + component + '-val ' + str(value))
-          #free up case name for next iteration 
-          commandLine = xmlchangeLines[0]
-          for line in xmlchangeLines[1:]:
-            commandLine = commandLine + ' && ' + line
-          if device == 'host':
-            commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '16'
-          if device == 'mic':
-            commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '244'
-          commandLine = cdCommand + '&&' + commandLine 
-          try:
-            print '*** HERE is the xml line = ' + commandLine
-            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-          except :
-            print "failed at entering the new case directory or doing xmlchange of pes"
-            pass
-          commandLine = cdCommand + ' && ./cesm_setup'
-          try:
-            print '*** here is the cesm_setup command = ' + commandLine
-            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-          except :
-            print "failed at entering  " + caseName + " directory or doing ./cesm_setup "
-            pass
-          
-          commandLine = cdCommand + ' && ' + caseName + '.clean_build'
-          try:
-            print commandLine
-            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-          except :
-            print "failed at entering  " + caseName + " directory or doing clean_build "
-            pass
+  return
 
-          if (device == 'mic') and (quad):
-            commandLine = "cp quadrature_mod.F90 " + caseName + "/SourceMods/src.cam ."
+def main(argv):
+  howToUse = 'trying this out'
+  try:
+    opts, args = getopt.getopt(argv,"h")
+  except getopt.GetoptError:
+        print howToUse
+        #sys.exit(2)
+        pass
+  for opt, arg in opts:
+      if opt == '-h':
+         print howToUse
+         sys.exit()
+  print 'Exectuting build and run system'
+  caseName = '' #initialize
+  for arch in arches:
+    device = arch
+    if (device == 'host') :
+      deviceDict = hostDict
+    elif (device == 'mic') :
+      deviceDict = micDict
+    for nNodes in nNodesList: 
+      for i in range(0,len(compsetList)): 
+        compset = compsetList[i]
+        for j in range(0,len(deviceDict['compilers'])):
+          compiler = deviceDict['compilers'][j]
+          for indx, rankCount in enumerate(deviceDict['mpiRanksPerNode']):
+            #loose logic on position of mpiranks and nthreads
+            nRankPerNode = rankCount
+            nThreadsPerRank = nthreads[indx] 
+            totalNtasks = nNodes * nRankPerNode
+            #build case name
+            caseName = cesmVersion + '.' + resolution[0]
+            caseName = caseName + '.' + str(nNodes) + 'nodes'
+            caseName = caseName + '.' + device
+            caseName = caseName + '.' + compset
+            caseName = caseName + '.' + compiler
+            caseName = caseName + '.' + str(nRankPerNode) + 'mpi'
+            caseName = caseName + '.' + str(nThreadsPerRank) + 'omp'
+            cdCommand = 'cd ' + caseName + ' '
+            createNewCase = './create_newcase -case ' + caseName + ' -res ' + resolution[0] \
+                            +  ' -compset ' + compset + ' -mach ' + machine \
+                            +  ' -compiler ' + compiler + ' -mpi ' + mpi
+            try: 
+              print createNewCase
+              subprocess.check_call(createNewCase, stderr=subprocess.STDOUT, shell=True)
+            except :
+              print 
+              pass
+            commandLine = cdCommand + ' && ./cesm_setup -clean'
             try:
               print commandLine
               subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             except :
-              print "failed at copying quadrature_mod.F90 into  " + caseName
+              print "failed at entering the new case directory or doing ./cesm_setup -clean"
               pass
-          commandLine = cdCommand + ' && ' + caseName + '.build'
-          try:
-            print commandLine
-            subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
-          except:
-            print "failed at entering " + caseName + "directory or doing build "
-            pass
-          commandLine = cdCommand + ' && ' + caseName + '.submit'
-          if device == 'host':
+            
+            xmlchangeLines=[]
+            xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 5')
+            xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_OPTION -val ndays')
+            xmlchangeLines.append('./xmlchange -file env_run.xml -id REST_OPTION -val never')
+            xmlchangeLines.append('./xmlchange -file env_run.xml -id TIMER_LEVEL -val 9')
+            xmlchangeLines.append('./xmlchange -file env_run.xml -id DOUT_S -val FALSE')
+            xmlchangeLines.append('./xmlchange -file env_run.xml -id COMP_RUN_BARRIERS -val TRUE')
+            for component in xmlchangeComponents:
+              for var in xmlchangeVar:
+                if var == 'NTASKS_':
+                  value = totalNtasks
+                elif var == 'NTHRDS_':
+                  value = nThreadsPerRank
+                elif var == 'ROOTPE_':  
+                  value = 0             
+                xmlchangeLines.append(xmlchangePesBase + var + component + '-val ' + str(value))
+            #free up case name for next iteration 
+            commandLine = xmlchangeLines[0]
+            for line in xmlchangeLines[1:]:
+              commandLine = commandLine + ' && ' + line
+            if device == 'host':
+              commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '16'
+            if device == 'mic':
+              commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '244'
+            commandLine = cdCommand + '&&' + commandLine 
+            try:
+              print '*** HERE is the xml line = ' + commandLine
+              subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+            except :
+              print "failed at entering the new case directory or doing xmlchange of pes"
+              pass
+            commandLine = cdCommand + ' && ./cesm_setup'
+            try:
+              print '*** here is the cesm_setup command = ' + commandLine
+              subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+            except :
+              print "failed at entering  " + caseName + " directory or doing ./cesm_setup "
+              pass
+            
+            commandLine = cdCommand + ' && ' + caseName + '.clean_build'
+            try:
+              print commandLine
+              subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+            except :
+              print "failed at entering  " + caseName + " directory or doing clean_build "
+              pass
+
+            if (device == 'mic') and (quad):
+              commandLine = "cp quadrature_mod.F90 " + caseName + "/SourceMods/src.cam ."
+              try:
+                print commandLine
+                subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+              except :
+                print "failed at copying quadrature_mod.F90 into  " + caseName
+                pass
+            commandLine = cdCommand + ' && ' + caseName + '.build'
             try:
               print commandLine
               subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
             except:
-              print "failed at entering " + caseName + "directory or doing submitting "
-              pass            
-          caseName = '' # clear the name
+              print "failed at entering " + caseName + "directory or doing build "
+              pass
+            commandLine = cdCommand + ' && ' + caseName + '.submit'
+            if device == 'host':
+              try:
+                print commandLine
+                subprocess.check_call(commandLine, stderr=subprocess.STDOUT, shell=True)
+              except:
+                print "failed at entering " + caseName + "directory or doing submitting "
+                pass            
+            caseName = '' # clear the name
 
 
-
+if __name__ == "__main__":
+   main(sys.argv[1:])
 
 
 
