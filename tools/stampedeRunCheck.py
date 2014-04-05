@@ -93,7 +93,7 @@ for arch in arches:
                 value = nThreadsPerRank
               elif var == 'ROOTPE_':  
                 value = 0             
-              xmlchangeLines.append(xmlchangePesBase + component + var + str(value))
+              xmlchangeLines.append(xmlchangePesBase + var + component + '-val ' + str(value))
           #free up case name for next iteration 
           commandLine = xmlchangeLines[0]
           for line in xmlchangeLines[1:]:
