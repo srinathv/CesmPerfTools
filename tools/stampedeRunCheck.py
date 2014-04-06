@@ -35,12 +35,58 @@ xmlchangeMaxTaskPerNode=' ./xmlchange -file env_mach_pes.xml -id MAX_TASKS_PER_N
 #
 
 def shellCommand(command,errorMessage):
+#command initiated where this script is ran
   try: 
     print command
     subprocess.check_call(command, stderr=subprocess.STDOUT, shell=True)
   except :
     print errorMessage
     pass
+  return
+
+
+def fixCaseRunFile(caseName,device = "host"):
+#for host (which may go away):
+#  mkbatch.stampede sets -n = N_tasks * nthreads
+#      and then changes -N
+#  we want -n = mpiRanksPerNode * nNodes
+#           -N = nNodes
+# also add the line  
+#read in the file into buffer (is caseName/caseName.run)
+  inputFile = caseName + "/" + caseName + ".run"
+  outputFile = caseName + "/" + caseName + ".run.swap"
+for line in inputFile.xreadlines():
+  outline = line
+  if nThreadsPerRank > 1:
+    if device == 'host':
+      ompLine = "setenv OMP_NUM_THHREADS " + str(nThreadsPerRank) + "\n"
+    elif device == 'mic':
+      ompLine = "setenv MIC_OMP_NUM_THREADS " + str(nThreadsPerRank) + "\n" + \
+                "setenv MIC_PPN " + str(nRanksPerNode) + "\n"
+  if device == 'host':
+    if "#SBATCH -n" in line :
+       outline = '#SBATCH -n ' + str(nRanksPerNode)  + "\n"
+  elif device == 'mic':
+    if "#SBATCH -n" in line :
+       outline = '#SBATCH -n ' + str(nNodes) + "\n"
+  if "#SBATCH -N" in line :
+     outline = '#SBATCH -N ' + str(nNodes) + "\n"
+  if "setenv SLURM_NPROCS" in line :
+     outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode) + "\n"
+  if "setenv OMP_STACKSIZE" in line :
+     outline = ompLine 
+  if device == 'mic':
+    if "#SBATCH -p normal" in line:
+      outline = "#SBATCH -p normal-mic \n"
+    if "ibrun $EXEROOT/cesm.exe >&! cesm.log.$LID" in line:
+      outline = "ibrun.symm -m $EXEROOT/cesm.exe >&! cesm.log.$LID \n" 
+  outputFile.write(outline)
+
+outputFile.close()
+
+
+  outpuFilet.write(inputFile.read(  ).replace(stext, rtext))
+
 
   return
 
@@ -71,7 +117,7 @@ def main(argv):
           compiler = deviceDict['compilers'][j]
           for indx, rankCount in enumerate(deviceDict['mpiRanksPerNode']):
             #loose logic on position of mpiranks and nthreads
-            nRankPerNode = rankCount
+            nRanksPerNode = rankCount
             nThreadsPerRank = nthreads[indx] 
             totalNtasks = nNodes * nRankPerNode
             #build case name
@@ -80,7 +126,7 @@ def main(argv):
             caseName = caseName + '.' + device
             caseName = caseName + '.' + compset
             caseName = caseName + '.' + compiler
-            caseName = caseName + '.' + str(nRankPerNode) + 'mpi'
+            caseName = caseName + '.' + str(nRanksPerNode) + 'mpi'
             caseName = caseName + '.' + str(nThreadsPerRank) + 'omp'
             cdCommand = 'cd ' + caseName + ' '
             createNewCase = './create_newcase -case ' + caseName + ' -res ' + resolution[0] \
