@@ -81,11 +81,11 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
     outputFile.write(outline)
   outputFile.close()
   inputFile.close()
-  commandLine1 = "cp " + inputFile + " " + inputFile + ".org"
-  errorMessage = "failed to copy " + inputFile + " to *.org"
+  commandLine1 = "cp " + inputFile.name() + " " + inputFile.name() + ".org"
+  errorMessage = "failed to copy " + inputFile.name() + " to *.org"
   shellCommand(commandLine1,errorMessage)
-  commandLine2 = "cp " + outputFile + " " + inputFile
-  errorMessage = "failed to copy " + outputFile + " into " + inputFile
+  commandLine2 = "cp " + outputFile.name() + " " + inputFile.name()
+  errorMessage = "failed to copy " + outputFile.name() + " into " + inputFile.name()
   shellCommand(commandLine2,errorMessage)
   return
 
