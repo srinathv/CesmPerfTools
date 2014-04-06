@@ -71,8 +71,12 @@ for line in inputFile.xreadlines():
        outline = '#SBATCH -n ' + str(nNodes) + "\n"
   if "#SBATCH -N" in line :
      outline = '#SBATCH -N ' + str(nNodes) + "\n"
-  if "setenv SLURM_NPROCS" in line :
-     outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode) + "\n"
+  if device == 'host':
+    if "setenv SLURM_NPROCS" in line :
+       outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode) + "\n"
+  elif device == 'mic':
+    if "setenv SLURM_NPROCS" in line :
+       outline = 'setenv SLURM_NPROCS ' + str(nNodes) + "\n"
   if "setenv OMP_STACKSIZE" in line :
      outline = ompLine 
   if device == 'mic':
