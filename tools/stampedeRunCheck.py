@@ -46,9 +46,9 @@ def shellCommand(command,errorMessage):
 
 
 def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
-  inputFile = caseName + "/" + caseName + ".run"
-  outputFile = caseName + "/" + caseName + ".run.swap"
-  for line in inputFile.readlines():
+  inputFile = open(caseName + "/" + caseName + ".run",'r')
+  outputFile = open(caseName + "/" + caseName + ".run.swap",'w')
+  for line in inputFile.xreadlines():
     outline = line
     if nThreadsPerRank > 1:
       if device == 'host':
