@@ -79,6 +79,7 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
         outline = "ibrun.symm -m $EXEROOT/cesm.exe >&! cesm.log.$LID \n" 
     outputFile.write(outline)
   outputFile.close()
+  inputFile.close()
   commandLine1 = "cp " + inputFile + " " + inputFile + ".org"
   errorMessage = "failed to copy " + inputFile + " to *.org"
   shellCommand(commandLine1,errorMessage)
