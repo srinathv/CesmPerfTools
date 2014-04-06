@@ -116,7 +116,7 @@ def main(argv):
             #loose logic on position of mpiranks and nthreads
             nRanksPerNode = rankCount
             nThreadsPerRank = nthreads[indx] 
-            totalNtasks = nNodes * nRankPerNode
+            totalNtasks = nNodes * nRanksPerNode
             #build case name
             caseName = cesmVersion + '.' + resolution[0]
             caseName = caseName + '.' + str(nNodes) + 'nodes'
