@@ -46,8 +46,10 @@ def shellCommand(command,errorMessage):
 
 
 def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
-  inputFile = open(caseName + "/" + caseName + ".run",'r')
-  outputFile = open(caseName + "/" + caseName + ".run.swap",'w')
+  inputFileName = caseName + "/" + caseName + ".run"
+  inputFile = open(inputFileName,'r')
+  outputFileName = caseName + "/" + caseName + ".run.swap"
+  outputFile = open(outputFileName,'w')
   for line in inputFile.xreadlines():
     outline = line
     ompLine = ''
@@ -81,11 +83,11 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
     outputFile.write(outline)
   outputFile.close()
   inputFile.close()
-  commandLine1 = "cp " + inputFile.name() + " " + inputFile.name() + ".org"
-  errorMessage = "failed to copy " + inputFile.name() + " to *.org"
+  commandLine1 = "cp " + inputFileName + " " + inputFileName + ".org"
+  errorMessage = "failed to copy " + inputFileName + " to *.org"
   shellCommand(commandLine1,errorMessage)
-  commandLine2 = "cp " + outputFile.name() + " " + inputFile.name()
-  errorMessage = "failed to copy " + outputFile.name() + " into " + inputFile.name()
+  commandLine2 = "cp " + outputFileName + " " + inputFileName
+  errorMessage = "failed to copy " + outputFileName + " into " + inputFileName
   shellCommand(commandLine2,errorMessage)
   return
 
