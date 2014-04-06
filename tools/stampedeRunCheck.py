@@ -53,34 +53,33 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
   for line in inputFile.xreadlines():
     outline = line
     ompLine = ''
-    if nThreadsPerRank > 1:
-      if device == 'host':
-        ompLine = "setenv OMP_NUM_THHREADS " + str(nThreadsPerRank) + "\n"
-      elif device == 'mic':
-        ompLine = "setenv MIC_OMP_NUM_THREADS " + str(nThreadsPerRank) + "\n" + \
-                  "setenv MIC_PPN " + str(nRanksPerNode) + "\n"
-    if device == 'host':
-      if "#SBATCH -n" in line :
-         outline = '#SBATCH -n ' + str(nRanksPerNode)  + "\n"
-    elif device == 'mic':
-      if "#SBATCH -n" in line :
-         outline = '#SBATCH -n ' + str(nNodes) + "\n"
     if "#SBATCH -N" in line :
-       outline = '#SBATCH -N ' + str(nNodes) + "\n"
+     outline = '#SBATCH -N ' + str(nNodes) + "\n"
+
     if device == 'host':
+      ompLine = "setenv OMP_NUM_THHREADS " + str(nThreadsPerRank) + "\n"
+      if "#SBATCH -n" in line :
+        outline = '#SBATCH -n ' + str(nRanksPerNode)  + "\n"
       if "setenv SLURM_NPROCS" in line :
-         outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode) + "\n"
+        outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode) + "\n"
+
     elif device == 'mic':
+      ompLine = "setenv MIC_OMP_NUM_THREADS " + str(nThreadsPerRank) + "\n" + \
+                "setenv MIC_PPN " + str(nRanksPerNode) + "\n"
+      if "#SBATCH -n" in line :
+        outline = '#SBATCH -n ' + str(nNodes) + "\n"
       if "setenv SLURM_NPROCS" in line :
-         outline = 'setenv SLURM_NPROCS ' + str(nNodes) + "\n"
-    if "setenv OMP_STACKSIZE" in line :
-       outline = ompLine 
-    if device == 'mic':
+        outline = 'setenv SLURM_NPROCS ' + str(nNodes) + "\n"
       if "#SBATCH -p normal" in line:
         outline = "#SBATCH -p normal-mic \n"
       if "ibrun $EXEROOT/cesm.exe >&! cesm.log.$LID" in line:
         outline = "ibrun.symm -m $EXEROOT/cesm.exe >&! cesm.log.$LID \n" 
+
+    if "setenv OMP_STACKSIZE" in line :
+       outline = ompLine 
+
     outputFile.write(outline)
+
   outputFile.close()
   inputFile.close()
   commandLine1 = "cp " + inputFileName + " " + inputFileName + ".org"
