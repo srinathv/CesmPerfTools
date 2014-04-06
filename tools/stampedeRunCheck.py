@@ -19,7 +19,7 @@ resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
 #arches=['host','mic']
-arches=['host']
+arches=['mic']
 quad=False
 
 
@@ -45,14 +45,7 @@ def shellCommand(command,errorMessage):
   return
 
 
-def fixCaseRunFile(caseName,device = "host"):
-#for host (which may go away):
-#  mkbatch.stampede sets -n = N_tasks * nthreads
-#      and then changes -N
-#  we want -n = mpiRanksPerNode * nNodes
-#           -N = nNodes
-# also add the line  
-#read in the file into buffer (is caseName/caseName.run)
+def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
   inputFile = caseName + "/" + caseName + ".run"
   outputFile = caseName + "/" + caseName + ".run.swap"
   for line in inputFile.xreadlines():
@@ -87,7 +80,11 @@ def fixCaseRunFile(caseName,device = "host"):
     outputFile.write(outline)
   outputFile.close()
   commandLine1 = "cp " + inputFile + " " + inputFile + ".org"
-  commandLine2 = "cp " + outputFile + " " + inputFile 
+  errorMessage = "failed to copy " + inputFile + " to *.org"
+  shellCommand(commandLine1,errorMessage)
+  commandLine2 = "cp " + outputFile + " " + inputFile
+  errorMessage = "failed to copy " + outputFile + " into " + inputFile
+  shellCommand(commandLine2,errorMessage)
   return
 
 def main(argv):
@@ -183,27 +180,15 @@ def main(argv):
             commandLine = cdCommand + ' && ' + caseName + '.build'
             errorMessage = "failed at entering " + caseName + "directory or doing build "
             shellCommand(commandLine,errorMessage)
+  
+            fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes)
 
             commandLine = cdCommand + ' && ' + caseName + '.submit'
-            if device == 'host':
-              errorMessage = "failed at entering " + caseName + "directory or doing submitting "
-              shellCommand(commandLine,errorMessage)
+            errorMessage = "failed at entering " + caseName + "directory or doing submitting "
+            shellCommand(commandLine,errorMessage)
          
             caseName = '' # clear the name
 
-
 if __name__ == "__main__":
    main(sys.argv[1:])
-
-
-
-
-####if MIC then do the run substituions
-
-### for intelmic<14> fix <case>.run file by reading in the file and replacing particular parts
-#with open("out.txt", "wt") as fout:
-#    with open("Stud.txt", "rt") as fin:
-#        for line in fin:
-#            fout.write(line.replace('A', 'Orange'))
-
 
