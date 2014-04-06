@@ -50,6 +50,7 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
   outputFile = open(caseName + "/" + caseName + ".run.swap",'w')
   for line in inputFile.xreadlines():
     outline = line
+    ompLine = ''
     if nThreadsPerRank > 1:
       if device == 'host':
         ompLine = "setenv OMP_NUM_THHREADS " + str(nThreadsPerRank) + "\n"
@@ -178,12 +179,12 @@ def main(argv):
               errorMessage = "failed at copying quadrature_mod.F90 into  " + caseName
               shellCommand(commandLine,errorMessage)
               
+            fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes)
+
             commandLine = cdCommand + ' && ' + caseName + '.build'
             errorMessage = "failed at entering " + caseName + "directory or doing build "
             shellCommand(commandLine,errorMessage)
   
-            fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes)
-
             commandLine = cdCommand + ' && ' + caseName + '.submit'
             errorMessage = "failed at entering " + caseName + "directory or doing submitting "
             shellCommand(commandLine,errorMessage)
