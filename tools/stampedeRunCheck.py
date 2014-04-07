@@ -10,11 +10,11 @@ import os,sys,getopt
 
 
 hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
-micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[192,96]}
+micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[60,48,30,8]}
 cesmVersion='c13b7'
 compsetList = ['FIDEAL','FC5']
 nNodesList = [8]
-nthreads = [1 , 2]
+nthreads = [1 ,2,4]
 resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
@@ -45,7 +45,7 @@ def shellCommand(command,errorMessage):
   return
 
 
-def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
+def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes, time='01:30:00'):
   inputFileName = caseName + "/" + caseName + ".run"
   inputFile = open(inputFileName,'r')
   outputFileName = caseName + "/" + caseName + ".run.swap"
@@ -62,6 +62,8 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
         outline = '#SBATCH -n ' + str(nRanksPerNode)  + "\n"
       if "setenv SLURM_NPROCS" in line :
         outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode) + "\n"
+      if "#SBATCH -t " in line:
+        outline = "#SBATCH -t " + time +  "\n"
 
     elif device == 'mic':
       ompLine = "setenv MIC_OMP_NUM_THREADS " + str(nThreadsPerRank) + "\n" + \
@@ -72,6 +74,8 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes):
         outline = 'setenv SLURM_NPROCS ' + str(nNodes) + "\n"
       if "#SBATCH -p normal" in line:
         outline = "#SBATCH -p normal-mic \n"
+       if "#SBATCH -t " in line:
+        outline = "#SBATCH -t " + time +  "\n"
       if "ibrun $EXEROOT/cesm.exe >&! cesm.log.$LID" in line:
         outline = "ibrun.symm -m $EXEROOT/cesm.exe >&! cesm.log.$LID \n" 
 
@@ -179,8 +183,13 @@ def main(argv):
               commandLine = "cp quadrature_mod.F90 " + caseName + "/SourceMods/src.cam ."
               errorMessage = "failed at copying quadrature_mod.F90 into  " + caseName
               shellCommand(commandLine,errorMessage)
-              
-            fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes)
+            
+            if (device == 'mic'):
+              simTime = '04:30:00'
+            elif (device == 'host'):
+              simTime = '01:30:00'
+             
+            fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes, simTime)
 
             commandLine = cdCommand + ' && ' + caseName + '.build'
             errorMessage = "failed at entering " + caseName + "directory or doing build "
