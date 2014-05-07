@@ -3,13 +3,18 @@
 
 import matplotlib.pyplot as plt
 
-def autolabelRel(rects):
+def autolabelRel(rects,texts=None):
     # attach some text labels
-    for rect in rects:
-        height = rect.get_height()
-        if (height == 0):
-          print "skiping top label b/c zero"
-        else:
-          plt.text(rect.get_x()+rect.get_width()/2., 1.01*height, '%.2f'%float(height),
-                ha='center', va='bottom')
+    for i in range(len(rects)):
+    #for rect in rects:
+      height = rects[i].get_height()
+      if texts == None:
+        word =  '%.2f'%float(height)
+      else:
+        word = texts[i]
+      if (height == 0):
+        print "skiping top label b/c zero"
+      else:
+        plt.text(rects[i].get_x()+rects[i].get_width()/2., 1.01*height, word,
+              ha='center', va='bottom')
 
