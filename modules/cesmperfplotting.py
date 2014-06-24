@@ -3,7 +3,7 @@
 
 import matplotlib.pyplot as plt
 
-def autolabelRel(rects,texts=None):
+def autolabelRel(rects,texts=None,fs=16):
     # attach some text labels
     for i in range(len(rects)):
     #for rect in rects:
@@ -16,5 +16,5 @@ def autolabelRel(rects,texts=None):
         print "skiping top label b/c zero"
       else:
         plt.text(rects[i].get_x()+rects[i].get_width()/2., 1.01*height, word,
-              ha='center', va='bottom')
+              ha='center', va='bottom',fontsize=16)
 
