@@ -34,14 +34,39 @@ import numpy as np
 #  SYPD :    2.61473933252923    
 
 
-class ParseGlobalIntegrals:
+class ParseAtmData:
   def __init__(self):
     self.numTimeSteps = -1
+    self.totalRunTime = -1.
+    self.loopRunTime = -1.
+    self.sypd = -1.
     self.dataTable = None
     self.dataSet = False
 
   def setNumTimeSteps(self,numTimeSteps):
-    self.numTimeSteps= numTimeSteps
+    self.numTimeSteps = numTimeSteps
+
+  def getNumTimeSteps(self,):
+    return self.numTimeSteps
+
+  def setTotalRunTime(self,totalRunTime):
+    self.totalRunTime = totalRunTime
+
+  def getTotalRunTime(self,):
+    return self.totalRunTime 
+
+  def setLoopRunTime(self,loopRunTime):
+    self.loopRunTime = loopRunTime
+
+  def getLoopRunTime(self,):
+    return self.loopRunTime 
+  
+  def setSypd(self,sypd):
+    self.sypd = sypd
+
+  def getSypd(self,):
+    return self.sypd 
+
 
   def setNumRowsCols(self,numRows,numCols):
     self.numRows = numRows
