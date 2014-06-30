@@ -34,7 +34,7 @@ import numpy as np
 #  SYPD :    2.61473933252923    
 
 
-class ParseAtmData:
+class diffAtmData:
   def __init__(self):
     self.numTimeSteps = -1
     self.totalRunTime = -1.
@@ -42,6 +42,8 @@ class ParseAtmData:
     self.sypd = -1.
     self.dataTable = None
     self.dataSet = False
+    self.fileName1 = ''
+    self.fileName2 = ''
 
   def setNumTimeSteps(self,numTimeSteps):
     self.numTimeSteps = numTimeSteps
@@ -68,6 +70,8 @@ class ParseAtmData:
     return self.sypd 
 
 
+  def diffAtmLogs(self,file1,file2)
+#####################################################
   def setNumRowsCols(self,numRows,numCols):
     self.numRows = numRows
     self.numCols = numCols
