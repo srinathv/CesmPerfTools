@@ -30,7 +30,7 @@ quad=False
 
 xmlchangePesBase='./xmlchange -file env_mach_pes.xml -id '
 xmlchangeVar=['NTASKS_','NTHRDS_','ROOTPE_']
-xmlchangeComponents=['ATM ','LND ','ICE ','OCN ','CPL ','GLC ']
+xmlchangeComponents=['ATM ','LND ','ICE ','OCN ','CPL ','GLC ','ROF ','WAV ']
 xmlchangeMaxTaskPerNode=' ./xmlchange -file env_mach_pes.xml -id MAX_TASKS_PER_NODE -val '
 
 #ne=16 => 1536 total elements
