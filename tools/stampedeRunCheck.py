@@ -78,7 +78,7 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes, tim
         outline = 'setenv SLURM_NPROCS ' + str(nNodes) + "\n"
       if "#SBATCH -p normal" in line:
         outline = "#SBATCH -p normal-mic \n"
-       if "#SBATCH -t " in line:
+      if "#SBATCH -t " in line:
         outline = "#SBATCH -t " + time +  "\n"
       if "ibrun $EXEROOT/cesm.exe >&! cesm.log.$LID" in line:
         outline = "ibrun.symm -m $EXEROOT/cesm.exe >&! cesm.log.$LID \n" 
