@@ -34,7 +34,7 @@ import numpy as np
 #  SYPD :    2.61473933252923    
 
 
-class diffAtmData:
+class ParseAtmData:
   def __init__(self):
     self.numTimeSteps = -1
     self.totalRunTime = -1.
@@ -42,8 +42,6 @@ class diffAtmData:
     self.sypd = -1.
     self.dataTable = None
     self.dataSet = False
-    self.fileName1 = ''
-    self.fileName2 = ''
 
   def setNumTimeSteps(self,numTimeSteps):
     self.numTimeSteps = numTimeSteps
@@ -70,7 +68,39 @@ class diffAtmData:
     return self.sypd 
 
 
-  def diffAtmLogs(self,file1,file2)
+class DiffAtmData:
+    def __init__(self):
+    self.fileName1 = ''
+    self.fileName2 = ''
+
+#open the 2 files
+#create the atm log data structes for each file
+#diff the appropiate quantities in the correct way
+    #even if the number of time steps are not the same do the diff but log the misaligment
+#store into the DiffAtmData data structure
+#report if there are "mis-aligment" 
+#check if timestep size is the same ????
+
+  def setFileName1(self,fileName1):
+    self.fileName1 = fileName1
+
+  def getFileName1(self,):
+    return self.fileName1
+
+  def setFileName2(self,fileName2):
+    self.fileName2 = fileName2
+
+  def getFileName2(self,):
+    return self.fileName2
+
+
+  def diffAtmLogs(self,file1,file2):
+    setFileName1(file1)
+    setFileName2(file2)
+    
+    #open the files
+    #
+
 #####################################################
   def setNumRowsCols(self,numRows,numCols):
     self.numRows = numRows
