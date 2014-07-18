@@ -179,7 +179,7 @@ def main(argv):
             for line in xmlchangeLines[1:]:
               commandLine = commandLine + ' && ' + line
             if device == 'host':
-              commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '16'
+              commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '32'
             if device == 'mic':
               commandLine = commandLine + ' &&' + xmlchangeMaxTaskPerNode + '244'
             commandLine = cdCommand + '&&' + commandLine 
