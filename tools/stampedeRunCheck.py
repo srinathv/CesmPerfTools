@@ -9,7 +9,8 @@ import subprocess
 import os,sys,getopt
 
 
-hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[1,2,4,8,16]}
+#hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[1,2,4,8,16]}
+hostDict={'compilers':['intel'],'mpiRanksPerNode':[1,2,4,8,16]}
 #hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
 #micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[60,48,30,8]}
 cesmVersion='cesm1_2_2'
@@ -17,7 +18,7 @@ compsetList = ['FC5AQUAP']
 #compsetList = ['FIDEAL','FC5']
 #testList = ['PFS'] #-testname PFS
 nNodesList = [1]
-nthreads = [32,16,8,4,2,1]
+nthreads = [32,16,8,4,2]
 resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
@@ -186,7 +187,7 @@ def main(argv):
             errorMessage = "failed at entering the new case directory or doing xmlchange of pes"
             shellCommand(commandLine,errorMessage)
 
-            commandLine = cdCommand + ' && ./cesm_setup'
+            commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
             errorMessage = "failed at entering  " + caseName + " directory or doing ./cesm_setup "
             shellCommand(commandLine,errorMessage)
             
