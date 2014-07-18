@@ -9,17 +9,21 @@ import subprocess
 import os,sys,getopt
 
 
-hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
-micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[60,48,30,8]}
-cesmVersion='c13b7'
-compsetList = ['FIDEAL','FC5']
-nNodesList = [8]
-nthreads = [1 ,2,4]
+hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[1,2,4,8,16]}
+#hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
+#micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[60,48,30,8]}
+cesmVersion='cesm1_2_2'
+compsetList = ['FC5AQUAP']
+#compsetList = ['FIDEAL','FC5']
+#testList = ['PFS'] #-testname PFS
+nNodesList = [1]
+nthreads = [32,16,8,4,2,1]
 resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
+testName='PFS'
 #arches=['host','mic']
-arches=['mic']
+arches=['host']
 quad=False
 
 
@@ -108,13 +112,16 @@ def main(argv):
          sys.exit()
   print 'Exectuting build and run system'
   caseName = '' #initialize
+  itTest = False
+  if testName:
+    isTest = True
   for arch in arches:
     device = arch
     if (device == 'host') :
       deviceDict = hostDict
     elif (device == 'mic') :
       deviceDict = micDict
-    for nNodes in nNodesList: 
+    for nNodes in nNodesList:
       for i in range(0,len(compsetList)): 
         compset = compsetList[i]
         for j in range(0,len(deviceDict['compilers'])):
@@ -125,7 +132,10 @@ def main(argv):
             nThreadsPerRank = nthreads[indx] 
             totalNtasks = nNodes * nRanksPerNode
             #build case name
-            caseName = cesmVersion + '.' + resolution[0]
+            if isTest:
+              caseName = testName + '.'
+            
+            caseName = caseName + cesmVersion + '.' + resolution[0]
             caseName = caseName + '.' + str(nNodes) + 'nodes'
             caseName = caseName + '.' + device
             caseName = caseName + '.' + compset
@@ -136,6 +146,9 @@ def main(argv):
             createNewCase = './create_newcase -case ' + caseName + ' -res ' + resolution[0] \
                             +  ' -compset ' + compset + ' -mach ' + machine \
                             +  ' -compiler ' + compiler + ' -mpi ' + mpi
+            if isTest:
+              createnewCase = createNewCase + '-testname ' + testName
+
             errorMessage = "the " + caseName + " already exists, failed trying to create new case"
             shellCommand(createNewCase,errorMessage)
             
@@ -144,12 +157,14 @@ def main(argv):
             shellCommand(commandLine,errorMessage)
             
             xmlchangeLines=[]
-            xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 5')
-            xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_OPTION -val ndays')
-            xmlchangeLines.append('./xmlchange -file env_run.xml -id REST_OPTION -val never')
-            xmlchangeLines.append('./xmlchange -file env_run.xml -id TIMER_LEVEL -val 9')
-            xmlchangeLines.append('./xmlchange -file env_run.xml -id DOUT_S -val FALSE')
-            xmlchangeLines.append('./xmlchange -file env_run.xml -id COMP_RUN_BARRIERS -val TRUE')
+            xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 2')
+            #xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 5')
+            #xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_OPTION -val ndays')
+            #xmlchangeLines.append('./xmlchange -file env_run.xml -id REST_OPTION -val never')
+            #xmlchangeLines.append('./xmlchange -file env_run.xml -id TIMER_LEVEL -val 9')
+            #xmlchangeLines.append('./xmlchange -file env_run.xml -id DOUT_S -val FALSE')
+            #xmlchangeLines.append('./xmlchange -file env_run.xml -id COMP_RUN_BARRIERS -val FALSE')
+            #xmlchangeLines.append('./xmlchange -file env_run.xml -id COMP_RUN_BARRIERS -val TRUE')
             for component in xmlchangeComponents:
               for var in xmlchangeVar:
                 if var == 'NTASKS_':
