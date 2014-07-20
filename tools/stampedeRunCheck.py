@@ -10,7 +10,7 @@ import os,sys,getopt
 
 
 #hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[1,2,4,8,16]}
-hostDict={'compilers':['intel'],'mpiRanksPerNode':[1,2,4,8,16]}
+hostDict={'compilers':['intel'],'mpiRanksPerNode':[1,2,4,8,16,1,2,4,8,16]}
 #hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
 #micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[60,48,30,8]}
 cesmVersion='cesm1_2_2'
@@ -18,7 +18,7 @@ compsetList = ['FC5AQUAP']
 #compsetList = ['FIDEAL','FC5']
 #testList = ['PFS'] #-testname PFS
 nNodesList = [1]
-nthreads = [32,16,8,4,2]
+nthreads = [32,16,8,4,2,16,8,4,2,1]
 resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
@@ -150,7 +150,7 @@ def main(argv):
                             +  ' -compset ' + compset + ' -mach ' + machine \
                             +  ' -compiler ' + compiler + ' -mpi ' + mpi
             if isTest:
-              createNewCase = createNewCase + '-testname ' + testName
+              createNewCase = createNewCase + ' -testname ' + testName
 
             errorMessage = "the " + caseName + " already exists, failed trying to create new case"
             shellCommand(createNewCase,errorMessage)
