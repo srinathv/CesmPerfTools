@@ -63,6 +63,8 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes, tim
 
     if device == 'host':
       ompLine = "setenv OMP_NUM_THHREADS " + str(nThreadsPerRank) + "\n"
+      if isTest:
+        ompLine = ompLine + "setenv OMP_STACKSIZE 1000M \n"
       if "#SBATCH -n" in line :
         outline = '#SBATCH -n ' + str(nRanksPerNode)  + "\n"
       if "setenv SLURM_NPROCS" in line :
@@ -148,7 +150,7 @@ def main(argv):
                             +  ' -compset ' + compset + ' -mach ' + machine \
                             +  ' -compiler ' + compiler + ' -mpi ' + mpi
             if isTest:
-              createnewCase = createNewCase + '-testname ' + testName
+              createNewCase = createNewCase + '-testname ' + testName
 
             errorMessage = "the " + caseName + " already exists, failed trying to create new case"
             shellCommand(createNewCase,errorMessage)
