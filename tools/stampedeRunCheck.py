@@ -10,7 +10,8 @@ import os,sys,getopt
 
 
 #hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[1,2,4,8,16]}
-hostDict={'compilers':['intel'],'mpiRanksPerNode':[1,2,4,8,16,1,2,4,8,16]}
+#hostDict={'compilers':['intel'],'mpiRanksPerNode':[1,2]}
+hostDict={'compilers':['intel'],'mpiRanksPerNode':[4,8,16,1,2,4,8,16]}
 #hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
 #micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[60,48,30,8]}
 cesmVersion='cesm1_2_2'
@@ -18,7 +19,8 @@ compsetList = ['FC5AQUAP']
 #compsetList = ['FIDEAL','FC5']
 #testList = ['PFS'] #-testname PFS
 nNodesList = [1]
-nthreads = [32,16,8,4,2,16,8,4,2,1]
+nthreads = [8,4,2,16,8,4,2,1]
+#nthreads = [32,16]
 resolution=['ne16_ne16']
 machine='stampede'
 mpi='impi'
@@ -63,8 +65,7 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes, tim
 
     if device == 'host':
       ompLine = "setenv OMP_NUM_THHREADS " + str(nThreadsPerRank) + "\n"
-      if isTest:
-        ompLine = ompLine + "setenv OMP_STACKSIZE 1000M \n"
+      ompLine = ompLine + "setenv OMP_STACKSIZE 500M \n"
       if "#SBATCH -n" in line :
         outline = '#SBATCH -n ' + str(nRanksPerNode)  + "\n"
       if "setenv SLURM_NPROCS" in line :
