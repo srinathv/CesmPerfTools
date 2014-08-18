@@ -10,16 +10,22 @@ import os,sys,getopt
 
 
 #hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[1,2,4,8,16]}
-hostDict={'compilers':['intel'],'mpiRanksPerNode':[1,2,4,8,16]}
+#hostDict={'compilers':['intel'],'mpiRanksPerNode':[1,2]}
+#hostDict={'compilers':['intel'],'mpiRanksPerNode':[4,8,16,1,2,4,8,16]}
+hostDict={'compilers':['intel'],'mpiRanksPerNode':[16]}
 #hostDict={'compilers':['intel','intel14'],'mpiRanksPerNode':[16,16]}
 #micDict={'compilers':['intelmic','intelmic14'],'mpiRanksPerNode':[60,48,30,8]}
 cesmVersion='cesm1_2_2'
 compsetList = ['FC5AQUAP']
 #compsetList = ['FIDEAL','FC5']
 #testList = ['PFS'] #-testname PFS
-nNodesList = [1]
-nthreads = [32,16,8,4,2]
-resolution=['ne16_ne16']
+#nNodesList = [1]
+nNodesList = [72,144]
+#nthreads = [8,4,2,16,8,4,2,1]
+nthreads = [2]
+#nthreads = [32,16]
+#resolution=['ne16_ne16']
+resolution=['ne120_ne120']
 machine='stampede'
 mpi='impi'
 testName='PFS'
@@ -63,10 +69,11 @@ def fixCaseRunFile(caseName, device, nThreadsPerRank, nRanksPerNode, nNodes, tim
 
     if device == 'host':
       ompLine = "setenv OMP_NUM_THHREADS " + str(nThreadsPerRank) + "\n"
+      ompLine = ompLine + "setenv OMP_STACKSIZE 500M \n"
       if "#SBATCH -n" in line :
-        outline = '#SBATCH -n ' + str(nRanksPerNode)  + "\n"
+        outline = '#SBATCH -n ' + str(nRanksPerNode * nNodes)  + "\n"
       if "setenv SLURM_NPROCS" in line :
-        outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode) + "\n"
+        outline = 'setenv SLURM_NPROCS ' + str(nRanksPerNode * nNodes) + "\n"
       if "#SBATCH -t " in line:
         outline = "#SBATCH -t " + time +  "\n"
 
@@ -148,7 +155,7 @@ def main(argv):
                             +  ' -compset ' + compset + ' -mach ' + machine \
                             +  ' -compiler ' + compiler + ' -mpi ' + mpi
             if isTest:
-              createnewCase = createNewCase + '-testname ' + testName
+              createNewCase = createNewCase + ' -testname ' + testName
 
             errorMessage = "the " + caseName + " already exists, failed trying to create new case"
             shellCommand(createNewCase,errorMessage)
