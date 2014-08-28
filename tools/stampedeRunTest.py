@@ -18,7 +18,7 @@ nThreadsPerRank = 2
 machine='stampede'
 compilerList=['intel','intel14','intel15']
 mpiList=['impi','impi4.1.3','impi5.0.0']
-createNewcaseCom='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
+createNewCaseCom='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
 casesDir='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts'
 
 
