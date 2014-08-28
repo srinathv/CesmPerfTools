@@ -9,6 +9,7 @@ import subprocess
 import os,sys,getopt
 
 
+testName=''
 cesmVersion='cxp'
 compsetResDict = {'FIDEAL':'ne16_ne16','FC5AQUAP':'ne16_ne16','FC5':'ne16_ne16','BC5':'ne16_g37'}
 nNodesList = [2]
@@ -17,8 +18,9 @@ nThreadsPerRank = 48
 machine='babbageKnc'
 compilerList=['intel','intel14','intel15']
 mpiList=['impi','impi4.1.3','impi5.0.up1']
-createNewcaseCom='/global/u1/v/vadlaman/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
+createNewCaseCom='/global/u1/v/vadlaman/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
 casesDir='/global/scratch2/sd/vadlaman/cesm_phi_cases'
+
 
 
 
@@ -53,7 +55,7 @@ def main(argv):
   print 'Exectuting build and run system'
   caseName = '' #initialize
 
-  itTest = False
+  isTest = False
   if testName:
     isTest = True
 
@@ -73,9 +75,9 @@ def main(argv):
           caseName = caseName + '.' + str(nRanksPerNode) + 'rmp'
           caseName = caseName + '.' + str(nThreadsPerRank) + 'omp'
 
-          cdCommand = 'cd ' + caseName + ' '
+          cdCommand = 'cd ' + casesDir + '/' + caseName + ' '
 
-          createNewCase = createNewCaseCom + ' -case ' + caseName + ' -res ' + resolution[0] \
+          createNewCase = createNewCaseCom + ' -case ' + caseName + ' -res ' + resolution \
                           +  ' -compset ' + compset + ' -mach ' + machine \
                           +  ' -compiler ' + compiler + ' -mpi ' + mpi
 
@@ -111,15 +113,15 @@ def main(argv):
           errorMessage = "failed at entering  " + caseName + " directory or doing ./cesm_setup "
           shellCommand(commandLine,errorMessage)
           
-          commandLine = cdCommand + ' && ' + caseName + '.clean_build'
+          commandLine = cdCommand + ' && ' + './' + caseName + '.clean_build'
           errorMessage = "failed at entering  " + caseName + " directory or doing clean_build "
           shellCommand(commandLine,errorMessage)
 
-          commandLine = cdCommand + ' && ' + caseName + '.build'
+          commandLine = cdCommand + ' && ' + './' + caseName + '.build'
           errorMessage = "failed at entering " + caseName + "directory or doing build "
           shellCommand(commandLine,errorMessage)
 
-          commandLine = cdCommand + ' && ' + caseName + '.submit'
+          commandLine = cdCommand + ' && ' + './' + caseName + '.submit'
           errorMessage = "failed at entering " + caseName + "directory or doing submitting "
           shellCommand(commandLine,errorMessage)
        
