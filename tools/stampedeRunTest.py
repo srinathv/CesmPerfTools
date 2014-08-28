@@ -101,14 +101,12 @@ def main(argv):
               elif var == 'ROOTPE_':
                 value = 0
               xmlchangeLines.append(xmlchangePesBase + var + component + '-val ' + str(value))
-          #free up case name for next iteration 
-          commandLine = xmlchangeLines[0]
-          for line in xmlchangeLines[1:]:
-            commandLine = cdCommand + '&&' + commandLine
+          for line in xmlchangeLines :
+            commandLine = cdCommand + '&&' + line
             errorMessage = "failed at entering the new case directory or doing xmlchange of pes"
             shellCommand(commandLine,errorMessage)
 
-          commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
+	  commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
           errorMessage = "failed at entering  " + caseName + " directory or doing ./cesm_setup "
           shellCommand(commandLine,errorMessage)
           
