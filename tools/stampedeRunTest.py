@@ -12,14 +12,16 @@ import os,sys,getopt
 testName=''
 cesmVersion='cxp'
 #compsetResDict = {'FIDEAL':'ne16_ne16','FC5AQUAP':'ne16_ne16','FC5':'ne16_ne16','BC5':'ne16_g37'}
-compsetResDict = {'FIDEAL':'f19_16','FC5AQUAP':'f19_g16','FC5':'f19_g16','BC5':'f19_g16','I':'ne16_ne16','I':'f19_g16'}
+#compsetResDict = {'FIDEAL':'f19_g16','FC5AQUAP':'f19_g16','FC5':'f19_g16','BC5':'f19_g16','I':'ne16_ne16','I':'f19_g16'}
+compsetResDict = {'FIDEAL':'f19_g16','FC5AQUAP':'f19_g16','FC5':'f19_g16','BC5':'f19_g16'}
 nNodesList = [2]
 nRanksPerNode = 16
 nThreadsPerRank = 2
 machine='stampede'
+#compilerList=['intel15.090']
 compilerList=['intel','intel14','intel15.024','intel15.090']
-mpiList=['impi']
-#mpiList=['impi','impi4.1.3','impi5.0.0']
+#mpiList=['impi']
+mpiList=['impi','impi4.1.3','impi5.0.0']
 createNewCaseCom='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
 casesDir='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts'
 
@@ -108,7 +110,7 @@ def main(argv):
             errorMessage = "failed at entering the new case directory or doing xmlchange of pes"
             shellCommand(commandLine,errorMessage)
 
-	        commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
+	  commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
           errorMessage = "failed at entering  " + caseName + " directory or doing ./cesm_setup "
           shellCommand(commandLine,errorMessage)
           
