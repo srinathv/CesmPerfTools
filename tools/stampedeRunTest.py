@@ -19,7 +19,7 @@ nRanksPerNode = 16
 nThreadsPerRank = 2
 machine='stampede'
 #compilerList=['intel15.090']
-compilerList=['intel','intel14','intel15.024','intel15.090']
+compilerList=['intel','intel14','intel15_024','intel15_090']
 #mpiList=['impi']
 mpiList=['impi','impi4.1.3','impi5.0.0']
 createNewCaseCom='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
@@ -28,7 +28,7 @@ casesDir='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts'
 
 
 xmlchangePesBase='./xmlchange -file env_mach_pes.xml -id '
-xmlchangeVar=['NTASKS_']
+xmlchangeVar=['NTASKS_','NTHRDS_']
 xmlchangeComponents=['ATM ','LND ','ICE ','OCN ','CPL ','GLC ','ROF ','WAV ']
 
 def shellCommand(command,errorMessage):
