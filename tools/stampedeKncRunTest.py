@@ -12,19 +12,24 @@ import os,sys,getopt
 testName=''
 cesmVersion='cxp'
 compsetResDict = {'FIDEAL':'ne16_ne16','FC5AQUAP':'ne16_ne16','FC5':'ne16_ne16','BC5':'ne16_g37'}
+#compsetResDict = {'FIDEAL':'f19_g16','FC5AQUAP':'f19_g16','FC5':'f19_g16','BC5':'f19_g16','I':'ne16_ne16','I':'f19_g16'}
+#compsetResDict = {'FIDEAL':'f19_g16','FC5AQUAP':'f19_g16','FC5':'f19_g16','BC5':'f19_g16'}
 nNodesList = [2]
 nRanksPerNode = 4
 nThreadsPerRank = 48
 machine='stampedeKnc'
-compilerList=['intel','intel14','intel15']
-mpiList=['impi','impi4.1.3','impi5.0.0']
+#compilerList=['intel','intel14','intel15_024','intel15_090']
+compilerList=['intel15_090']
+#mpiList=['impi']
+#mpiList=['impi','impi4.1.3','impi5.0.0']
+mpiList=['impi4.1.3','impi5.0.0']
 createNewCaseCom='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
 casesDir='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts'
 
 
 
 xmlchangePesBase='./xmlchange -file env_mach_pes.xml -id '
-xmlchangeVar=['NTASKS_']
+xmlchangeVar=['NTASKS_','NTHRDS_']
 xmlchangeComponents=['ATM ','LND ','ICE ','OCN ','CPL ','GLC ','ROF ','WAV ']
 
 def shellCommand(command,errorMessage):
@@ -45,7 +50,7 @@ def main(argv):
     opts, args = getopt.getopt(argv,"h")
   except getopt.GetoptError:
         print howToUse
-        #sys.exit(2)
+        sys.exit(2)
         pass
   for opt, arg in opts:
       if opt == '-h':
