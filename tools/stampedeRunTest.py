@@ -110,7 +110,7 @@ def main(argv):
             errorMessage = "failed at entering the new case directory or doing xmlchange of pes"
             shellCommand(commandLine,errorMessage)
 
-	  commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
+          commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
           errorMessage = "failed at entering  " + caseName + " directory or doing ./cesm_setup "
           shellCommand(commandLine,errorMessage)
           
@@ -125,7 +125,7 @@ def main(argv):
           commandLine = cdCommand + ' && ' + './' + caseName + '.submit'
           errorMessage = "failed at entering " + caseName + "directory or doing submitting "
           shellCommand(commandLine,errorMessage)
-       
+
           caseName = '' # clear the name
 
 if __name__ == "__main__":
