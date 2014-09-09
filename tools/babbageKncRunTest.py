@@ -24,8 +24,8 @@ casesDir='/global/scratch2/sd/vadlaman/cesm_phi_cases'
 
 
 
-xmlchangePesBase='./xmlchange -file env_mach_pes.xml -id '
-xmlchangeVar=['NTASKS_']
+xmlchangePesBase=' ./xmlchange -file env_mach_pes.xml -id '
+xmlchangeVar=['NTASKS_','NTHRDS_']
 xmlchangeComponents=['ATM ','LND ','ICE ','OCN ','CPL ','GLC ','ROF ','WAV ']
 
 def shellCommand(command,errorMessage):
@@ -46,7 +46,7 @@ def main(argv):
     opts, args = getopt.getopt(argv,"h")
   except getopt.GetoptError:
         print howToUse
-        #sys.exit(2)
+        sys.exit(2)
         pass
   for opt, arg in opts:
       if opt == '-h':
@@ -92,7 +92,7 @@ def main(argv):
           shellCommand(commandLine,errorMessage)
           
           xmlchangeLines=[]
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 2')
+          xmlchangeLines.append(' ./xmlchange -file env_run.xml -id STOP_N -val 2')
           for component in xmlchangeComponents:
             for var in xmlchangeVar:
               if var == 'NTASKS_':
@@ -102,10 +102,8 @@ def main(argv):
               elif var == 'ROOTPE_':
                 value = 0
               xmlchangeLines.append(xmlchangePesBase + var + component + '-val ' + str(value))
-          #free up case name for next iteration 
-          commandLine = xmlchangeLines[0]
-          for line in xmlchangeLines[1:]:
-            commandLine = cdCommand + '&&' + commandLine
+          for line in xmlchangeLines:
+            commandLine = cdCommand + '&&' + line
             errorMessage = "failed at entering the new case directory or doing xmlchange of pes"
             shellCommand(commandLine,errorMessage)
 
@@ -124,7 +122,7 @@ def main(argv):
           commandLine = cdCommand + ' && ' + './' + caseName + '.submit'
           errorMessage = "failed at entering " + caseName + "directory or doing submitting "
           shellCommand(commandLine,errorMessage)
-       
+
           caseName = '' # clear the name
 
 if __name__ == "__main__":

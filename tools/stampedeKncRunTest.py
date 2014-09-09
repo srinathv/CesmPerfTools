@@ -28,7 +28,8 @@ casesDir='/work/02463/srinathv/cesm1_3_beta09_xeon_phi/scripts'
 
 
 
-xmlchangePesBase='./xmlchange -file env_mach_pes.xml -id '
+
+xmlchangePesBase=' ./xmlchange -file env_mach_pes.xml -id '
 xmlchangeVar=['NTASKS_','NTHRDS_']
 xmlchangeComponents=['ATM ','LND ','ICE ','OCN ','CPL ','GLC ','ROF ','WAV ']
 
@@ -96,7 +97,7 @@ def main(argv):
           shellCommand(commandLine,errorMessage)
           
           xmlchangeLines=[]
-          xmlchangeLines.append('./xmlchange -file env_run.xml -id STOP_N -val 2')
+          xmlchangeLines.append(' ./xmlchange -file env_run.xml -id STOP_N -val 2')
           for component in xmlchangeComponents:
             for var in xmlchangeVar:
               if var == 'NTASKS_':
@@ -106,12 +107,12 @@ def main(argv):
               elif var == 'ROOTPE_':
                 value = 0
               xmlchangeLines.append(xmlchangePesBase + var + component + '-val ' + str(value))
-          for line in xmlchangeLines :
+          for line in xmlchangeLines:
             commandLine = cdCommand + '&&' + line
             errorMessage = "failed at entering the new case directory or doing xmlchange of pes"
             shellCommand(commandLine,errorMessage)
 
-	  commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
+          commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
           errorMessage = "failed at entering  " + caseName + " directory or doing ./cesm_setup "
           shellCommand(commandLine,errorMessage)
           
@@ -126,7 +127,7 @@ def main(argv):
           commandLine = cdCommand + ' && ' + './' + caseName + '.submit'
           errorMessage = "failed at entering " + caseName + "directory or doing submitting "
           shellCommand(commandLine,errorMessage)
-       
+
           caseName = '' # clear the name
 
 if __name__ == "__main__":
