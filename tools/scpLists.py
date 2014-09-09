@@ -4,7 +4,7 @@
 # 
 
 import subprocess
-import os,sys,getopt
+import os,sys,getopt,glob
 
 def shellCommand(command,errorMessage):
 #command initiated where this script is ran
@@ -17,7 +17,7 @@ def shellCommand(command,errorMessage):
 
 
 def main():
-  howToUse = 'scpDirs -l <wildcard list> -d <destination machine> -p <path to dump list and its contents>'
+  howToUse = 'scpDirs -l '<wildcard list>' -d '<destination machine>' -p '<path to dump list and its contents>''
   try:
     opts, args = getopt.getopt(sys.argv[1:],"hl:d:p:")
   except getopt.GetoptError:
@@ -36,11 +36,13 @@ def main():
         destPath = arg
       else:
         assert False, "unhandled option" 
+#make list of directories
+  cpList = glob.glob( wildCardList )
 
-  #make list of from wild card
-  cmd = 'echo ' + wildCardList
-  cpList = shellCommand( cmd, 'wildcard list is not understood')
-  print cpList 
+  for element in cpList:
+    scpCmd = ' scp ' + element + ' ' + machine + ':' + destPath + '/' + element
+    
+  
 
         
          
