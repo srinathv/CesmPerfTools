@@ -123,7 +123,7 @@ def main(argv):
           errorMessage = "failed at entering " + caseName + "directory or doing submitting "
           shellCommand(commandLine,errorMessage)
 
-          caseName = '' # clear the name
+          caseName = '' # clear the name """
 
 if __name__ == "__main__":
    main(sys.argv[1:])
