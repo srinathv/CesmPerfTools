@@ -27,9 +27,9 @@ machine='babbageKnc'
 compilerList=['intel14']
 mpiList=['impi5.0.up1']
 createNewCaseCom='/global/u1/v/vadlaman/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
-createNewCaseCom='/Users/srinathv/Repos/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
+#createNewCaseCom='/Users/srinathv/Repos/cesm1_3_beta09_xeon_phi/scripts/create_newcase'
 casesDir='/global/scratch2/sd/vadlaman/cesm_phi_cases'
-casesDir='/Users/srinathv/Temp'
+#casesDir='/Users/srinathv/Temp'
 
 
 #change key word from nodes to cards if Knc in machine name
