@@ -147,7 +147,7 @@ def main(argv):
 
   #clean build , build and submit stage
 
-"""            commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
+            commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
             errorMessage = "failed at entering  " + caseName + " directory or doing ./cesm_setup "
             shellCommand(commandLine,errorMessage)
             
@@ -164,7 +164,7 @@ def main(argv):
             shellCommand(commandLine,errorMessage)
 
             caseName = '' # clear the name
-"""
+
 if __name__ == "__main__":
    main(sys.argv[1:])
 
