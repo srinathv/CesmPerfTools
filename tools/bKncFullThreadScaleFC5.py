@@ -21,9 +21,7 @@ trialName='tScale'
 fullList=[1,2,4,8,15,16,30,60,120,240] # mpi * threads = 240
 #make lsit of tuples
 #ranksThreadsList=zip(neBaselist,neBaselist[::-1])
-#ranksThreadsList=zip(fullList,fullList[::-1])
-ranksThreadsList=[1] #fixing mpi ranks per node and just scanning threading capability...but OMP STACKSIZE will cause
-                    # problems
+ranksThreadsList=zip([1,1,1,1,1,1,1,1,1,1],fullList[::-1])
 
 
 machine='babbageKnc'

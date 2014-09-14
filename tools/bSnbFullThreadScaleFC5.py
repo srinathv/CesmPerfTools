@@ -22,7 +22,7 @@ fullList=[1,2,4,8,16,32] # mpi * threads = 32
 #make lsit of tuples
 #ranksThreadsList=zip(neBaselist,neBaselist[::-1])
 #ranksThreadsList=zip(fullList,fullList[::-1])
-ranksThreadsList=[1] #fixing mpi ranks per node and just scanning threading capability...but OMP STACKSIZE will cause
+ranksThreadsList=zip([1,1,1,1,1,1] ,fullList[::-1])
                     # problems
 
 
@@ -149,7 +149,7 @@ def main(argv):
               shellCommand(commandLine,errorMessage)
 
 
-
+"""
   #clean build , build and submit stage
 
             commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
@@ -169,7 +169,7 @@ def main(argv):
             shellCommand(commandLine,errorMessage)
 
             caseName = '' # clear the name
-
+"""
 if __name__ == "__main__":
    main(sys.argv[1:])
 
