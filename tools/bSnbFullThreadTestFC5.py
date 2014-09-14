@@ -18,7 +18,7 @@ nNodesList = [2]
 
 #creating a base list for mpi rank order 
 #neBaselist=[1,2,4,8,12,16,24,48,96,192] # mpi * threads = 192
-fullList=[1,2,4,8,16,32,64] # mpi * threads = 64
+fullList=[1,2,4,8,16,32] # mpi * threads = 32
 #make lsit of tuples
 #ranksThreadsList=zip(neBaselist,neBaselist[::-1])
 ranksThreadsList=zip(fullList,fullList[::-1])
