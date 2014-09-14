@@ -125,7 +125,7 @@ def main(argv):
             xmlchangeLines.append(' ./xmlchange -file env_run.xml -id REST_OPTION -val never')
             xmlchangeLines.append(' ./xmlchange -file env_run.xml -id TIMER_LEVEL -val 9')
             xmlchangeLines.append(' ./xmlchange -file env_run.xml -id DOUT_S -val FALSE')
-            xmlchangeLines.append(' ./xmlchange -file env_run.xml -id COMP_RUN_BARRIERS -val TRUE')
+           # xmlchangeLines.append(' ./xmlchange -file env_run.xml -id COMP_RUN_BARRIERS -val TRUE')
   ## now change the env_mach_pes.xml
             for component in xmlchangeComponents:
               for var in xmlchangeVar:
