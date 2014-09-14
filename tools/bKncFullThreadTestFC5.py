@@ -20,7 +20,8 @@ nNodesList = [2]
 #neBaselist=[1,2,4,8,12,16,24,48,96,192] # mpi * threads = 192
 fullList=[1,2,4,8,15,16,30,60,120,240] # mpi * threads = 240
 #make lsit of tuples
-ranksThreadsList=zip(neBaselist,neBaselist[::-1])
+#ranksThreadsList=zip(neBaselist,neBaselist[::-1])
+ranksThreadsList=zip(fullList,fullList[::-1])
 
 
 machine='babbageKnc'
