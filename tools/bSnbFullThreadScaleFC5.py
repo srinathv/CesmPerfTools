@@ -148,8 +148,6 @@ def main(argv):
               errorMessage = "failed at entering the new case directory or doing xmlchange of pes"
               shellCommand(commandLine,errorMessage)
 
-
-"""
   #clean build , build and submit stage
 
             commandLine = cdCommand + ' && ./cesm_setup -clean && ./cesm_setup'
@@ -169,7 +167,6 @@ def main(argv):
             shellCommand(commandLine,errorMessage)
 
             caseName = '' # clear the name
-"""
 if __name__ == "__main__":
    main(sys.argv[1:])
 
