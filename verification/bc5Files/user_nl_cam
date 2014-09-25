@@ -1,0 +1,7 @@
+! Users should add all user specific namelist changes below in the form of 
+! namelist_var = new_namelist_value 
+ 
+avgflag_pertape = 'A'
+nhtfrq  = -8760
+inithist = 'NONE'
+pertlim = 0.23d-13
