@@ -57,18 +57,18 @@ class kernelData:
     self.timePerCallAr = np.zeros(0)
 
   def calcAvgTotalTime(self):
-    assert isDataSet, "Data for "+ getCallName +" is not set."
+    assert self.isDataSet, "Data for "+ getCallName +" is not set."
     return np.mean(self.getTotalTimeAr())
       
   def calcStdTotalTime(self):
-    assert isDataSet, "Data for "+ getCallName +" is not set."
+    assert self.isDataSet, "Data for "+ getCallName +" is not set."
     return np.std(self.getTotalTimeAr())
     
 
   def calNumIterations(self):
-    assert isDataSet, "Data for "+ getCallName+ " is not set."
+    assert self.isDataSet, "Data for "+ getCallName+ " is not set."
     ttAr=self.getTotalTimeAr()[0]
-    tPcall=self.getTimePerCall()[0]
+    tPcall=self.getTimePerCallAr()[0]
     return ttAr/tPcall
 
 
@@ -138,29 +138,35 @@ class kernelTimeParser:
      # find member of myObjects list that has name and append to totalTimeArray
         tpcObj=getKernelDataObj(myObjects, callName)
         tpcObj.setTimePerCallAr(time * 10E-6)
+    for i,item in enumerate(myObjects):
+      myObjects[i].setIsDataSet(True)
 
-    self.data = myObjects   
+    self.data = myObjects
 
-  def getTotalTimeAvg(self, name):
-    # find the kernelData object with name in list
-    return avg
+  def getAvgTotalTime(self, name):
+    theObj=getKernelDataObj(self.data, name)
+    return theObj.calcAvgTotalTime()
 
-  def getTotaTimeStd(self, name):
-   
-    return std
+  def getStdTotalTime(self, name):
+    theObj=getKernelDataObj(self.data, name)
+    return theObj.calcStdTotalTime()
+
+  def getNumIterations(self, name):
+    theObj=getKernelDataObj(self.data, name)
+    return theObj.calNumIterations()
+ 
    
 if __name__=="__main__":
 
   myParser = kernelTimeParser()
   myParser.parseFile("../tests/kernelTime.1")
 
-#  avg1 = myParser.getTotalTimeAvg("kernel_divergence_sphere_v2")
-#  std2 = myParser.getTotalTimeStd("kernel_divergence_sphere_v2")
-#
-#  orgNumIt = myParser.getNumIterations("kernel_divergence_sphere") 
-#
-#  print avg1
-#  print std2
-#  pring orgNumIt
-#
+  avg1 = myParser.getAvgTotalTime("kernel_divergence_sphere_v2")
+  print avg1
+  std2 = myParser.getStdTotalTime("kernel_divergence_sphere_v2")
+  print std2
+  orgNumIt = myParser.getNumIterations("kernel_divergence_sphere") 
+  print orgNumIt
+
+
 
