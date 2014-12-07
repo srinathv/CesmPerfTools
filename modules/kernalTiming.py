@@ -74,7 +74,10 @@ class kernelData:
 
 def getKernelDataObj(myObjects, name):
    for myObj in myObjects:
-     if (myObj.getCallName() == 
+     if (myObj.getCallName() == name) :
+        return myObj
+#     else:
+#       print name + " is not a call assocaited with an object"
 
 
 class kernelTimeParser:
@@ -119,14 +122,17 @@ class kernelTimeParser:
    #read by line
     print 
     for line in lines:
-      #print line
+      #get name
       # for each line that has name and total time, set totaltime 
       if " total time " in line:
+        callName = re.search(r"\[(\w+)\]", line).group(1)
         time = float(line.split()[-1])
      # find member of myObjects list that has name and append to totalTimeArray
-        for myObj in myObjects:
-          if (myObj.getCallName() == re.search(r"\[(\w+)\]", line).group(1)):
-            myObj.setTotalTimeAr(time)
+#        for myObj in myObjects:
+#          if (myObj.getCallName() == re.search(r"\[(\w+)\]", line).group(1)):
+#            myObj.setTotalTimeAr(time)
+        ttObj=getKernelDataObj(myObjects, callName)
+        ttObj.setTotalTimeAr(time)
    # for each line that has name and time per call, set timepercal 
      # find member of myObjects list that has name and append to TimePerCallArray
       if " time per call " in line:
