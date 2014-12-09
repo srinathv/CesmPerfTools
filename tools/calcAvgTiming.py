@@ -2,6 +2,7 @@
 
 import sys,os
 import numpy as np
+import pylab as py
 sys.path.append('../modules')
 try:
   import cesmperftiming as cpt
@@ -31,6 +32,8 @@ def main():
   print "avg = ", np.average(primRunArray)
   print "std = ", np.std(primRunArray)
 
+  n,bins,patches=py.hist(primRunArray)
+  py.show()
 
 
 if __name__ == "__main__":

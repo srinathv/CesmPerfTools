@@ -1,13 +1,7 @@
-##Sample data
-#[kernel_divergence_sphere_v2] total time (sec):   0.486915000000000
-# [kernel_divergence_sphere_v2] time per call (usec):   4.869150000000000E-002
-# [kernel_divergence_sphere] total time (sec):   0.900765000000000
-# [kernel_divergence_sphere] time per call (usec):   9.007650000000000E-002
-# div is identical.
-#
+#! /usr/bin/env python
 
-#want to get bracketed quantites and parse for lines with total time
-#want to log if div is identical
+#need to add method for number of samples
+#allow for no identical and log it as attribute
 
 
 import sys
@@ -155,7 +149,12 @@ class kernelTimeParser:
     theObj=getKernelDataObj(self.data, name)
     return theObj.calNumIterations()
  
-   
+  def getCallNames(self):
+    callNames=[]
+    for obj in self.data:
+       callNames.append(obj.getCallName())
+    return callNames
+
 if __name__=="__main__":
 
   myParser = kernelTimeParser()
