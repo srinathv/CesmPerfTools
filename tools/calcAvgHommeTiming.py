@@ -11,13 +11,15 @@ except:
 
 
 def main(argv):
+    thisPath = os.path.abspath(".")
   try:
-    thisdir = os.path.abspath(".")
-    newDir=os.path.join(thisdir,argv[1])
-    os.chdir(os.path.dirname(newDir))
+    newPath=os.path.join(thisPath,argv[1])
+    os.chdir(os.path.dirname(newPath))
+    thisPath=newPath
   except:
     print "running local"
 
+  thisDir=thisPath.split("/")[-1]
 
   primRunList=[]
   numList=[]
@@ -46,7 +48,9 @@ def main(argv):
 
   #n,bins,patches=py.hist(primRunArray,bins=50)
   n,bins,patches=py.hist(primRunArray,bins=numBins)
-  py.xtitle="prim_run [sec]
+  py.xlabel="prim_run [sec]"
+  py.ylabel="Number of Homme trials"
+  py.title= thisDir + " NE=3, 1 mpi rank at full device thread use"
   py.show()
 
 
