@@ -10,8 +10,15 @@ except:
   print "could not files cesmTimer module"
 
 
-#def main(argv):
-def main():
+def main(argv):
+  try:
+    thisdir = os.path.abspath(".")
+    newDir=os.path.join(thisdir,argv[1])
+    os.chdir(os.path.dirname(newDir))
+  except:
+    print "running local"
+
+
   primRunList=[]
   numList=[]
   flist=os.listdir(".")
@@ -32,10 +39,17 @@ def main():
   print "avg = ", np.average(primRunArray)
   print "std = ", np.std(primRunArray)
 
-  n,bins,patches=py.hist(primRunArray,bins=50)
+  try:
+    numBins=int(argv[2])
+  except:
+    numBins=50
+
+  #n,bins,patches=py.hist(primRunArray,bins=50)
+  n,bins,patches=py.hist(primRunArray,bins=numBins)
+  py.xtitle="prim_run [sec]
   py.show()
 
 
 if __name__ == "__main__":
-   #main(sys.argv[1:]) 
-   main()
+   main(sys.argv[0:]) 
+   #main()
