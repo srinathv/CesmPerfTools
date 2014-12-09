@@ -32,7 +32,7 @@ def main():
   print "avg = ", np.average(primRunArray)
   print "std = ", np.std(primRunArray)
 
-  n,bins,patches=py.hist(primRunArray)
+  n,bins,patches=py.hist(primRunArray,bins=50)
   py.show()
 
 
