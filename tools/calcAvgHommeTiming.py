@@ -19,7 +19,7 @@ def main(argv):
   except:
     print "running local"
 
-  thisDir=thisPath.split("/")[-1]
+  thisDir=thisPath.split("/")[-2]
 
   primRunList=[]
   numList=[]
@@ -52,7 +52,7 @@ def main(argv):
   n,bins,patches=ax.hist(primRunArray,bins=numBins)
   py.xlabel("prim_run [sec]")
   py.ylabel("Number of Homme trials")
-  py.title(thisDir + " NE=3, 1 mpi rank at full device thread use\n Gaussian like")
+  py.title(thisDir + "\n NE=3, 1 mpi rank at full device thread use\n Gaussian like")
   py.show()
 
 
