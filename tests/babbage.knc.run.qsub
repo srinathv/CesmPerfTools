@@ -1,0 +1,21 @@
+#PBS -q regular
+#PBS -l nodes=1
+#PBS -l walltime=02:00:00
+#PBS -N perfTest
+#PBS -e perfTest.$PBS_JOBID.err
+#PBS -o perfTest.$PBS_JOBID.out
+#PBS -V
+
+cd $PBS_O_WORKDIR
+export OMP_NUM_THREADS=60
+get_micfile
+
+
+#export I_MPI_PIN_DOMAIN=108,compact
+##export KMP_AFFINITY=scatter,verbose
+##export KMP_AFFINITY=balanced,verbose
+exe=/chos/global/u1/v/vadlaman/homme-r4317-vec-refac/kncIntel14/test_execs/perfTest/perfTest
+#exe=/chos/global/u1/v/vadlaman/homme-r4317-vec-refac/kncOB/test_execs/perfTest/perfTest
+input=input.nl
+
+mpirun.mic -n 1 -hostfile micfile.$PBS_JOBID -ppn 1 $exe < $input
