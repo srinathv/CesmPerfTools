@@ -47,13 +47,18 @@ def main(argv):
     numBins=50
 
   #n,bins,patches=py.hist(primRunArray,bins=50)
-  fig1=py.figure(1)
+  fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
   ax = fig1.add_subplot(1,1,1,)
+  #figure(num=None, figsize=(8, 6), dpi=80, facecolor='w', edgecolor='k')
   n,bins,patches=ax.hist(primRunArray,bins=numBins)
   py.xlabel("prim_run [sec]")
   py.ylabel("Number of Homme trials")
   py.title(thisDir + "\n NE=3, 1 mpi rank at full device thread use\n Gaussian like")
-  py.show()
+  
+  try:
+    py.savefig(argv[3])
+  except:
+    py.show()
 
 
 if __name__ == "__main__":
