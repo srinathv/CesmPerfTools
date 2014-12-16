@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import sys,os
+import sys,os,getopt,argparse
 import numpy as np
 import matplotlib.pyplot as py
 sys.path.append('../modules')
@@ -10,16 +10,27 @@ except:
   print "could not files cesmTimer module"
 
 
-def main(argv):
-  thisPath = os.path.abspath(".")
-  try:
-    newPath=os.path.join(thisPath,argv[1]) + "/"
-    os.chdir(os.path.dirname(newPath))
-    thisPath=newPath
-  except:
-    print "running local"
+def main():
+#def main(argv):
+  parser = argparse.ArgumentParser(description='Given a directory with multiple post-indexed HommeTime files, this will '\
+                                                'calculate averages and standard deviations.  Also, a histogram will be generated')
+#  parser.add_argument('integers', metavar='N', type=int, nargs='+',
+#                   help='an integer for the accumulator')
+#this above syntax is for positional arguments
+  #parser.add_argument('-r','--rundir', , action='store_const', ### dest defaults to --<name> if --<name> is used
+  parser.add_argument('-r','--rundir', dest='rundir', default='.',
+                      help='Name of directory.')
 
-  thisDir=thisPath.split("/")[-2]
+  parser.add_argument('-n','--numbins', default=50,type=int,
+                      help='Number of bins for historgram.')
+
+  parser.add_argument('-f','--figurename', default=None,
+                      help='Name of histogram figure.')
+  args = parser.parse_args()
+
+  os.chdir(args.rundir)
+
+  thisDir=os.getcwd().split("/")[-1]
 
   primRunList=[]
   numList=[]
@@ -29,7 +40,6 @@ def main(argv):
       suffix=fileName.split(".")[1]
       if (suffix.isdigit()):
         numList.append(int(suffix))
-  #for i in range(1,101):
   for i in numList:
     print i 
     parser=cpt.cesmTimeParser()
@@ -43,27 +53,20 @@ def main(argv):
   print "avg = ", avg
   print "std = ", std 
 
-  try:
-    numBins=int(argv[2])
-  except:
-    numBins=50
 
-  #n,bins,patches=py.hist(primRunArray,bins=50)
   fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
   ax = fig1.add_subplot(1,1,1,)
-  #figure(num=None, figsize=(8, 6), dpi=80, facecolor='w', edgecolor='k')
-  n,bins,patches=ax.hist(primRunArray,bins=numBins)
+  n,bins,patches=ax.hist(primRunArray,bins=args.numbins)
   py.xlabel("prim_run [sec]")
   py.ylabel("Number of Homme trials")
   py.title(thisDir + "\n NE=3, 1 mpi rank at full device thread use \n" +
            "Avg =" + str(avg) + ", Std = " + str(std) )
   
-  try:
-    py.savefig(argv[3])
-  except:
+  if args.figurename:
+    py.savefig(args.figurename)
+  else:
     py.show()
 
 
 if __name__ == "__main__":
-   main(sys.argv[0:]) 
-   #main()
+   main()
