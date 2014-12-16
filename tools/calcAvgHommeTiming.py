@@ -13,7 +13,7 @@ except:
 def main(argv):
   thisPath = os.path.abspath(".")
   try:
-    newPath=os.path.join(thisPath,argv[1])
+    newPath=os.path.join(thisPath,argv[1]) + "/"
     os.chdir(os.path.dirname(newPath))
     thisPath=newPath
   except:
@@ -38,8 +38,10 @@ def main(argv):
     
   print "number of members = ", len(numList)
   primRunArray=np.array(primRunList)
-  print "avg = ", np.average(primRunArray)
-  print "std = ", np.std(primRunArray)
+  avg=  np.average(primRunArray)
+  std = np.std(primRunArray)
+  print "avg = ", avg
+  print "std = ", std 
 
   try:
     numBins=int(argv[2])
@@ -53,7 +55,8 @@ def main(argv):
   n,bins,patches=ax.hist(primRunArray,bins=numBins)
   py.xlabel("prim_run [sec]")
   py.ylabel("Number of Homme trials")
-  py.title(thisDir + "\n NE=3, 1 mpi rank at full device thread use\n Gaussian like")
+  py.title(thisDir + "\n NE=3, 1 mpi rank at full device thread use \n" +
+           "Avg =" + str(avg) + ", Std = " + str(std) )
   
   try:
     py.savefig(argv[3])
