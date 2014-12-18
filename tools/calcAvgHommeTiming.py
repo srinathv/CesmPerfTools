@@ -36,7 +36,7 @@ def main():
   numList=[]
   flist=os.listdir(".")
   for fileName in flist:
-    if ("HommeTime" in fileName):
+    if ("HommeTime." in fileName):
       suffix=fileName.split(".")[1]
       if (suffix.isdigit()):
         numList.append(int(suffix))
