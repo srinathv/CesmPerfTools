@@ -29,7 +29,8 @@ def main():
   
   parser.add_argument('-t','--figuretitle', default="NE=3, 1 mpi rank at full device thread use" ,
                       help='Title on histogram figure.')
-  parser.add_argument('-g','--grouptime', default="prim_run" ,
+
+  parser.add_argument('-g','--grouptime', default="prim_run",
                       help='Group timing desired.')
 
   args = parser.parse_args()
@@ -50,7 +51,7 @@ def main():
     print i 
     parser=cpt.cesmTimeParser()
     parser.parseFile("HommeTime." + str(i))
-    primRunList.append(parser.getDataEntry(grouptime,"wallmax"))
+    primRunList.append(parser.getDataEntry(args.grouptime,"wallmax"))
     
   print "number of members = ", len(numList)
   primRunArray=np.array(primRunList)
@@ -63,9 +64,9 @@ def main():
   fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
   ax = fig1.add_subplot(1,1,1,)
   n,bins,patches=ax.hist(primRunArray,bins=args.numbins)
-  py.xlabel("prim_run [sec]")
+  py.xlabel(args.grouptime + "[sec]")
   py.ylabel("Number of Homme trials")
-  py.title(thisDir + "\n "+ figuretitle + "\n" +
+  py.title(thisDir + "\n "+ args.figuretitle + "\n" +
            "Avg =" + str(avg) + ", Std = " + str(std) )
   
   if args.figurename:
