@@ -50,8 +50,14 @@ def main():
   for i in numList:
     print i 
     parser=cpt.cesmTimeParser()
-    parser.parseFile("HommeTime." + str(i))
-    primRunList.append(parser.getDataEntry(args.grouptime,"wallmax"))
+    try:
+      parser.parseFile("HommeTime." + str(i))
+    except:
+      print "There seems to be no HommeTime.<number> files."
+    try:
+      primRunList.append(parser.getDataEntry(args.grouptime,"wallmax"))
+    except:
+      print "The " + args.grouptime + " seems not to be in the HommeTime files."
     
   print "number of members = ", len(numList)
   primRunArray=np.array(primRunList)
