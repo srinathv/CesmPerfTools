@@ -7,7 +7,8 @@ sys.path.append('../modules')
 try:
   import cesmperftiming as cpt
 except:
-  print "could not files cesmTimer module"
+  print "Error: could not files cesmTimer module"
+  sys.exit(1)
 
 
 def main():
@@ -35,7 +36,11 @@ def main():
 
   args = parser.parse_args()
 
-  os.chdir(args.rundir)
+  try:
+    os.chdir(args.rundir)
+  except:
+    print "Error: there seems not to be a " + args.rundir
+    sys.exit(1)
 
   thisDir=os.getcwd().split("/")[-1]
 
@@ -53,11 +58,13 @@ def main():
     try:
       parser.parseFile("HommeTime." + str(i))
     except:
-      print "There seems to be no HommeTime.<number> files."
+      print "Error: There seems to be no HommeTime.<number> files."
+      sys.exit(1)
     try:
       primRunList.append(parser.getDataEntry(args.grouptime,"wallmax"))
     except:
-      print "The " + args.grouptime + " seems not to be in the HommeTime files."
+      print "Error: The " + args.grouptime + " seems not to be in the HommeTime files."
+      sys.exit(1)
     
   print "number of members = ", len(numList)
   primRunArray=np.array(primRunList)
