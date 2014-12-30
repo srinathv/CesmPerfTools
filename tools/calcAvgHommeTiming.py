@@ -5,7 +5,7 @@
   #parser.add_argument('-r','--rundir', , action='store_const', ### dest defaults to --<name> if --<name> is used
 
 
-import sys,os,getopt,argparse
+import sys,os,getopt,argparse,math
 import numpy as np
 import matplotlib.pyplot as py
 sys.path.append('../modules')
@@ -44,7 +44,18 @@ def calcAvg(theDir,groupTime): #which thing to average and get std
   array=np.array(primRunList)
   avg =  np.average(array)
   std = np.std(array)  
+  print "avg = ", avg
+  print "std = ", std 
+  print "number of members = ", num
+
   return avg,std,array,num
+
+def calcZScore(avg1,std1,num1,avg2,std2,num2):
+  numerator=abs(avg1-avg2)
+  denom=math.sqrt(((std1**2)/num1)+(std2**2)/num2)
+  zScore=numerator/denom
+  return zScore
+  
 
 def main():
   parser = argparse.ArgumentParser(description='Given a directory with multiple post-indexed HommeTime files, this will '\
@@ -79,9 +90,6 @@ def main():
 
   thisDir=os.getcwd().split("/")[-1]
   runDirAvg,runDirStd,primRunArray,numRunDir=calcAvg(thisDir,args.grouptime)
-  print "avg = ", runDirAvg
-  print "std = ", runDirStd 
-  print "number of members = ", numRunDir
 
 
   fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
@@ -104,12 +112,16 @@ def main():
   if args.zToRundir:
     print "we have a ztoRundir"
     try:
-      os.chdir(args.rundir)
+      os.chdir(args.zToRundir)
+      thisDir=os.getcwd().split("/")[-1]
     except:
       print "Error: there seems not to be a " + args.rundir
       sys.exit(1)
 
-   
+    twoDirAvg,twoDirStd,twoRunArray,twoNumDir=calcAvg(thisDir,args.grouptime)
+    zScore=calcZScore(runDirAvg,runDirStd,numRunDir,twoDirAvg,twoDirStd,twoNumDir)
+    print "zScore is " + str(zScore)
+
   else:
      print "no zRunDir"
 
