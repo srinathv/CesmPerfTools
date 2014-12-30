@@ -75,13 +75,16 @@ def main():
   parser.add_argument('-g','--grouptime', default="prim_run",
                       help='Group timing desired.')
 
-  parser.add_argument('-z','--zToRundir', dest='zToRundir', default='',
+  parser.add_argument('-z','--zToRundir', dest='zToRundir', default=None,
                       help='Name of second directory of which to calculate z score.')
+ 
+  parser.add_argument('-p','--plot',action="store_true",
+                      help='Will plot.  If -f is given then figurename is used for saved figure.')
 
   args = parser.parse_args()
 
-  currentDir=os.getcwd()
 
+  currentDir=os.getcwd()
   try:
     os.chdir(args.rundir)
   except:
@@ -91,24 +94,22 @@ def main():
   thisDir=os.getcwd().split("/")[-1]
   runDirAvg,runDirStd,primRunArray,numRunDir=calcAvg(thisDir,args.grouptime)
 
-
-  fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
-  ax = fig1.add_subplot(1,1,1,)
-  n,bins,patches=ax.hist(primRunArray,bins=args.numbins)
-  py.xlabel(args.grouptime + "[sec]")
-  py.ylabel("Number of Homme trials")
-  py.title(thisDir + "\n "+ args.figuretitle + "\n" +
-           "Avg =" + str(runDirAvg) + ", Std = " + str(runDirStd) )
-  
-  if args.figurename:
-    py.savefig(args.figurename)
-  else:
-    py.show()
+  if (args.plot) or (args.figurename):
+    fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
+    ax = fig1.add_subplot(1,1,1,)
+    n,bins,patches=ax.hist(primRunArray,bins=args.numbins)
+    py.xlabel(args.grouptime + "[sec]")
+    py.ylabel("Number of Homme trials")
+    py.title(thisDir + "\n "+ args.figuretitle + "\n" +
+             "Avg =" + str(runDirAvg) + ", Std = " + str(runDirStd) )
+    
+    if args.figurename:
+      py.savefig(args.figurename)
+    else:
+      py.show()
 
 
   os.chdir(currentDir)
-  
-
   if args.zToRundir:
     print "we have a ztoRundir"
     try:
