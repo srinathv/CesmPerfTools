@@ -45,7 +45,8 @@ def main():
         print "Error: there seems not to be a " + thisDir
         sys.exit(1)
       avg,std,array,num=caht.calcAvg(thisDir,args.grouptime)
-      eachList=[dirs,avg,std]
+    
+      eachList=[dirs,avg,std,num]
       bigList.append(eachList)
       os.chdir(currentDir)
     #plot
@@ -54,14 +55,15 @@ def main():
     newpos=pos+width
     py.rc(('xtick','ytick','axes'), labelsize=20.0)
 
-    fig=py.figure(figsize=(12,14))
+    fig=py.figure(figsize=(4,6))
+    #fig=py.figure(figsize=(12,14))
     ax1=fig.add_subplot(111)
 #    #ax2=fig.add_subplot(212)
 #
     ratioBars=ax1.bar(newpos, [x[1] for x in bigList], width, color='b',yerr=[x[2] for x in bigList])
 #    ax1.set_ylabel('different', fontsize=20)
     ax1.set_xticks(newpos)
-    ax1.set_xticklabels( [x[0] for x in bigList] , rotation=80,fontsize=20)
+    ax1.set_xticklabels( [x[0] for x in bigList] , rotation=15,fontsize=10)
 #    #
 #    ax1.set_title('Stampede FC5, ne16_ne16 \n' +
 #              '(compiler: intel/13.1.1.163 , impi: impi/4.1.1.036 ) \n' +
