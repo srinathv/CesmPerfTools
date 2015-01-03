@@ -48,21 +48,20 @@ def main():
       eachList=[dirs,avg,std]
       bigList.append(eachList)
       os.chdir(currentDir)
-    print bigList
     #plot
-#    pos = np.arange(int(np.size(names)))    # the bar centers on the x axis
-#    width = 0.35
-#    newpos=pos+width
-#    plt.rc(('xtick','ytick','axes'), labelsize=20.0)
-#
-#    fig=plt.figure(figsize=(12,14))
-#    ax1=fig.add_subplot(111)
+    pos = np.arange(int(len(bigList)))    # the bar centers on the x axis
+    width = 0.35
+    newpos=pos+width
+    py.rc(('xtick','ytick','axes'), labelsize=20.0)
+
+    fig=py.figure(figsize=(12,14))
+    ax1=fig.add_subplot(111)
 #    #ax2=fig.add_subplot(212)
 #
-#    ratioBars=ax1.bar(newpos, ratios, width, color='b')
+    ratioBars=ax1.bar(newpos, [x[1] for x in bigList], width, color='b',yerr=[x[2] for x in bigList])
 #    ax1.set_ylabel('different', fontsize=20)
-#    ax1.set_xticks(newpos)
-#    ax1.set_xticklabels( names, rotation=80,fontsize=20)
+    ax1.set_xticks(newpos)
+    ax1.set_xticklabels( [x[0] for x in bigList] , rotation=80,fontsize=20)
 #    #
 #    ax1.set_title('Stampede FC5, ne16_ne16 \n' +
 #              '(compiler: intel/13.1.1.163 , impi: impi/4.1.1.036 ) \n' +
@@ -76,10 +75,12 @@ def main():
 #    strPercents=['%.1f'%x + '%' for x in percents]
 #        
 #    cpp.autolabelRel(ratioBars,strPercents)
-#    else:
-#      print "missing the list to bar plot"
-#      sys.exit(1)
-#
+    cpp.autolabelRel(ratioBars)
+    py.show()
+  else:
+      print "missing the list to bar plot"
+      sys.exit(1)
+
 
 if __name__ == "__main__":
    main()
