@@ -11,6 +11,7 @@ import matplotlib.pyplot as py
 sys.path.append('../modules')
 try:
   import cesmperftiming as cpt
+  import cesmperfplotting as cpp
 except:
   print "Error: could not files cesmTimer module"
   sys.exit(1)
@@ -80,7 +81,7 @@ def main():
  
   parser.add_argument('-p','--plot',action="store_true",
                       help='Will plot.  If -f is given then figurename is used for saved figure.')
-
+  
   args = parser.parse_args()
 
 
@@ -92,7 +93,8 @@ def main():
     sys.exit(1)
 
   thisDir=os.getcwd().split("/")[-1]
-  runDirAvg,runDirStd,primRunArray,numRunDir=calcAvg(thisDir,args.grouptime)
+  if not args.listRundir:
+    runDirAvg,runDirStd,primRunArray,numRunDir=calcAvg(thisDir,args.grouptime)
 
   if (args.plot) or (args.figurename):
     fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
@@ -110,6 +112,7 @@ def main():
 
 
   os.chdir(currentDir)
+
   if args.zToRundir:
     print "we have a ztoRundir"
     try:
@@ -118,14 +121,13 @@ def main():
     except:
       print "Error: there seems not to be a " + args.rundir
       sys.exit(1)
-
     twoDirAvg,twoDirStd,twoRunArray,twoNumDir=calcAvg(thisDir,args.grouptime)
     zScore=calcZScore(runDirAvg,runDirStd,numRunDir,twoDirAvg,twoDirStd,twoNumDir)
     print "zScore is " + str(zScore)
-
   else:
      print "no zRunDir"
 
+  os.chdir(currentDir)
 
 if __name__ == "__main__":
    main()
