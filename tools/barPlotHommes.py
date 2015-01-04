@@ -51,9 +51,14 @@ def main():
       os.chdir(currentDir)
 
     zList=["base"]
+    percents=[""]
     for elem in bigList[1:]:
       zscore=caht.calcZScore(elem[1],elem[2],elem[3],bigList[0][1],bigList[0][2],bigList[0][3])
-      zList.append('%.3f' % float(zscore))
+      per=(bigList[0][1]-elem[1])/bigList[0][1]
+      zList.append(str('%.2f' % float(zscore)) + ' z, ' + str('%.2f' % per)  + '%')
+    
+    
+        
       
     #plot
     pos = np.arange(int(len(bigList)))    # the bar centers on the x axis
