@@ -49,6 +49,12 @@ def main():
       eachList=[dirs,avg,std,num]
       bigList.append(eachList)
       os.chdir(currentDir)
+
+    zList=["base"]
+    for elem in bigList[1:]:
+      zscore=caht.calcZScore(elem[1],elem[2],elem[3],bigList[0][1],bigList[0][2],bigList[0][3])
+      zList.append('%.3f' % float(zscore))
+      
     #plot
     pos = np.arange(int(len(bigList)))    # the bar centers on the x axis
     width = 0.35
@@ -74,10 +80,10 @@ def main():
 #
 #    for t in ax1.get_yticklabels():
 #        t.set_color('b')
-#    strPercents=['%.1f'%x + '%' for x in percents]
+#    zscores[0]=zList[0]
+#    zscores=['%.2f'%float(x)  for x in zList]
 #        
-#    cpp.autolabelRel(ratioBars,strPercents)
-    cpp.autolabelRel(ratioBars)
+    cpp.autolabelRel(ratioBars,zList)
     py.show()
   else:
       print "missing the list to bar plot"
