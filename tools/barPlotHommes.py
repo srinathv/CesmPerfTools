@@ -66,7 +66,7 @@ def main():
     newpos=pos+width
     py.rc(('xtick','ytick','axes'), labelsize=20.0)
 
-    fig=py.figure(figsize=(4,6))
+    fig=py.figure(figsize=(3*int(len(bigList)),2*int(len(bigList))))
     #fig=py.figure(figsize=(12,14))
     ax1=fig.add_subplot(111)
 #    #ax2=fig.add_subplot(212)
@@ -95,7 +95,7 @@ def main():
     else:
       py.show()
   
-else:
+  else:
       print "missing the list to bar plot"
       sys.exit(1)
 
