@@ -71,8 +71,9 @@ def main():
     ax1=fig.add_subplot(111)
 #    #ax2=fig.add_subplot(212)
 #
-    ratioBars=ax1.bar(newpos, [x[1] for x in bigList], width, color='b',yerr=[x[2] for x in bigList])
-    ax1.set_ylabel(args.grouptime + ' [sec]', fontsize=15)
+    #ratioBars=ax1.bar(newpos, [x[1] for x in bigList], width, color='b',yerr=[x[2] for x in bigList])
+    ratioBars=ax1.plot(newpos, [x[1] for x in bigList], width, color='b',yerr=[x[2] for x in bigList])
+#    ax1.set_ylabel('different', fontsize=20)
     ax1.set_xticks(newpos)
     ax1.set_xticklabels( [x[0] for x in bigList] , rotation=15,fontsize=10)
 #    #
