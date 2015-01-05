@@ -82,6 +82,7 @@ def main():
 #              'Host: 2 omp threads for each of 16 MPI ranks \n' +
 #              'KNC: 48 omp threads for each 4 MPI ranks \n ' +
 #              'Percentage of DRIVER_RUN_LOOP' ,fontsize=20.)
+    ax1.set_title(args.figuretitle,fontsize=20.)
 #
 #    for t in ax1.get_yticklabels():
 #        t.set_color('b')
