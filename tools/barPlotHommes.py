@@ -90,8 +90,12 @@ def main():
 #    zscores=['%.2f'%float(x)  for x in zList]
 #        
     cpp.autolabelRel(ratioBars,zList)
-    py.show()
-  else:
+    if args.figurename:
+      py.savefig(args.figurename)
+    else:
+      py.show()
+  
+else:
       print "missing the list to bar plot"
       sys.exit(1)
 
