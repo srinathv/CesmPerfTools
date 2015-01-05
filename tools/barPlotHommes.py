@@ -3,6 +3,7 @@
 import sys,os,getopt,argparse,math
 import numpy as np
 import matplotlib.pyplot as py
+
 sys.path.append('../modules')
 try:
   import cesmperftiming as cpt
@@ -51,11 +52,19 @@ def main():
       os.chdir(currentDir)
 
     zList=["base"]
+    colorList=['black']
     percents=[""]
     for elem in bigList[1:]:
       zscore=caht.calcZScore(elem[1],elem[2],elem[3],bigList[0][1],bigList[0][2],bigList[0][3])
       per=(bigList[0][1]-elem[1])/bigList[0][1]
-      zList.append(str('%.2f' % float(zscore)) + ' z, ' + str('%.2f' % per)  + '%')
+      if zscore > 2.33:
+        isDiff='green'
+      else:
+        isDiff='red'
+      theRelDiff=str('%.2f' % per + ' rel. diff') 
+      zList.append(theRelDiff)
+      colorList.append(isDiff)
+      #zList.append(str('%.2f' % float(zscore)) + ' z, ' + str('%.2f' % per)  + '% rel. diff.')
     
     
         
@@ -67,29 +76,17 @@ def main():
     py.rc(('xtick','ytick','axes'), labelsize=20.0)
 
     fig=py.figure(figsize=(3*int(len(bigList)),2*int(len(bigList))))
-    #fig=py.figure(figsize=(12,14))
     ax1=fig.add_subplot(111)
 #    #ax2=fig.add_subplot(212)
-#
     ratioBars=ax1.bar(newpos, [x[1] for x in bigList], width, color='b',yerr=[x[2] for x in bigList])
     ax1.set_ylabel(args.grouptime + ' [sec]', fontsize=15)
     ax1.set_xticks(newpos)
     ax1.set_xticklabels( [x[0] for x in bigList] , rotation=15,fontsize=10)
-#    #
-#    ax1.set_title('Stampede FC5, ne16_ne16 \n' +
-#              '(compiler: intel/13.1.1.163 , impi: impi/4.1.1.036 ) \n' +
-#              '2 nodes, for each node: \n'+
-#              'Host: 2 omp threads for each of 16 MPI ranks \n' +
-#              'KNC: 48 omp threads for each 4 MPI ranks \n ' +
-#              'Percentage of DRIVER_RUN_LOOP' ,fontsize=20.)
     ax1.set_title(args.figuretitle,fontsize=20.)
 #
-#    for t in ax1.get_yticklabels():
-#        t.set_color('b')
-#    zscores[0]=zList[0]
-#    zscores=['%.2f'%float(x)  for x in zList]
-#        
-    cpp.autolabelRel(ratioBars,zList)
+    #for t in ax1.get_yticklabels():
+    #    t.set_color('b')
+    cpp.autolabelRel(ratioBars,zList,12,colorList)
     if args.figurename:
       py.savefig(args.figurename)
     else:
