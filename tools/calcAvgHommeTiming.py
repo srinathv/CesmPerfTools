@@ -81,7 +81,9 @@ def main():
  
   parser.add_argument('-p','--plot',action="store_true",
                       help='Will plot.  If -f is given then figurename is used for saved figure.')
-  
+  parser.add_argument('-per','--plotpercent',action="store_true",
+                      help='Distribution plots Std as percentage.') 
+
   args = parser.parse_args()
 
 
@@ -93,8 +95,8 @@ def main():
     sys.exit(1)
 
   thisDir=os.getcwd().split("/")[-1]
-  if not args.listRundir:
-    runDirAvg,runDirStd,primRunArray,numRunDir=calcAvg(thisDir,args.grouptime)
+#  if not args.listRundir:
+  runDirAvg,runDirStd,primRunArray,numRunDir=calcAvg(thisDir,args.grouptime)
 
   if (args.plot) or (args.figurename):
     fig1=py.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
@@ -102,8 +104,12 @@ def main():
     n,bins,patches=ax.hist(primRunArray,bins=args.numbins)
     py.xlabel(args.grouptime + "[sec]")
     py.ylabel("Number of Homme trials")
-    py.title(thisDir + "\n "+ args.figuretitle + "\n" +
-             "Avg =" + str(runDirAvg) + ", Std = " + str(runDirStd) )
+    plotTitle = thisDir + "\n "+ args.figuretitle + "\n" + "Avg =" + str(runDirAvg) 
+    if args.plotpercent:
+      plotTitle= plotTitle + ", Std % = " + str(runDirStd/runDirAvg * 100 )
+    else:
+      plotTitle= plotTitle + ", Std = " + str(runDirStd)
+    py.title(plotTitle )
     
     if args.figurename:
       py.savefig(args.figurename)
