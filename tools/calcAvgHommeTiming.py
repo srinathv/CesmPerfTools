@@ -7,7 +7,6 @@
 
 import sys,os,getopt,argparse,math
 import numpy as np
-import matplotlib.pyplot as py
 sys.path.append('../modules')
 try:
   import cesmperftiming as cpt
@@ -85,7 +84,13 @@ def main():
                       help='Distribution plots Std as percentage.') 
 
   args = parser.parse_args()
-
+  
+  if (args.plot) or (args.figurename):
+    try:
+      import matplotlib.pyplot as py
+    except:
+       print "Error: no pyplot with matplotlib"
+       sys.exit(1)
 
   currentDir=os.getcwd()
   try:
