@@ -10,9 +10,8 @@ import numpy as np
 sys.path.append('../modules')
 try:
   import cesmperftiming as cpt
-  import cesmperfplotting as cpp
 except:
-  print "Error: could not files cesmTimer module"
+  print "Error: could not find cesmTimer module"
   sys.exit(1)
 
 
@@ -89,8 +88,8 @@ def main():
     try:
       import matplotlib.pyplot as py
     except:
-       print "Error: no pyplot with matplotlib"
-       sys.exit(1)
+      print "Error: no pyplot with matplotlib"
+      sys.exit(1)
 
   currentDir=os.getcwd()
   try:
