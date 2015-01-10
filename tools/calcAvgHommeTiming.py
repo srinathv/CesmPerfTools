@@ -39,12 +39,12 @@ def calcAvg(theDir,groupTime): #which thing to average and get std
       sys.exit(1)
   
   num= len(numList) 
-  print "number of members = ", num
   array=np.array(primRunList)
   avg =  np.average(array)
   std = np.std(array)  
   print "avg = ", avg
   print "std = ", std 
+  print " % = ", std/avg * 100
   print "number of members = ", num
 
   return avg,std,array,num
